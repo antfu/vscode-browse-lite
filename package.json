@@ -50,6 +50,12 @@
         "command": "browse-lite.controls.external",
         "title": "Open page with system browser",
         "icon": "$(link-external)"
+      },
+      {
+        "category": "Browse Lite",
+        "command": "browse-lite.controls.debug",
+        "title": "Open debug page",
+        "icon": "$(debug)"
       }
     ],
     "configuration": {
@@ -205,6 +211,11 @@
         {
           "when": "resourceScheme == webview-panel && browse-lite-active",
           "command": "browse-lite.controls.external",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceScheme == webview-panel && browse-lite-active && !browse-lite-debug-active",
+          "command": "browse-lite.controls.debug",
           "group": "navigation"
         }
       ]

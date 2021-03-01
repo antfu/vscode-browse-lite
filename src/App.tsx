@@ -19,6 +19,7 @@ interface IState {
   format: 'jpeg' | 'png'
   frame: object | null
   url: string
+  isDebug: boolean
   isVerboseMode: boolean
   isInspectEnabled: boolean
   isDeviceEmulationEnabled: boolean
@@ -62,6 +63,7 @@ class App extends React.Component<any, IState> {
       format: 'jpeg',
       url: 'about:blank',
       isVerboseMode: false,
+      isDebug: false,
       isInspectEnabled: false,
       isDeviceEmulationEnabled: false,
       history: {
@@ -178,11 +180,7 @@ class App extends React.Component<any, IState> {
         if (!payload)
           return
 
-        this.updateState({
-          isVerboseMode: payload.isVerboseMode ? payload.isVerboseMode : false,
-          url: payload.startUrl ? payload.startUrl : 'about:blank',
-          format: payload.format ? payload.format : 'jpeg',
-        })
+        this.updateState(Object.assign(payload, { url: payload.startUrl || this.state.url }))
 
         if (payload.startUrl) {
           this.connection.send('Page.navigate', {
@@ -246,15 +244,18 @@ class App extends React.Component<any, IState> {
   public render() {
     return (
       <div className="App">
-        <Toolbar
-          url={this.state.url}
-          viewport={this.state.viewportMetadata}
-          onActionInvoked={this.onToolbarActionInvoked}
-          canGoBack={this.state.history.canGoBack}
-          canGoForward={this.state.history.canGoForward}
-          isInspectEnabled={this.state.isInspectEnabled}
-          isDeviceEmulationEnabled={this.state.isDeviceEmulationEnabled}
-        />
+        {
+          // hide navbar for devtools
+          this.state.isDebug ? null : <Toolbar
+            url={this.state.url}
+            viewport={this.state.viewportMetadata}
+            onActionInvoked={this.onToolbarActionInvoked}
+            canGoBack={this.state.history.canGoBack}
+            canGoForward={this.state.history.canGoForward}
+            isInspectEnabled={this.state.isInspectEnabled}
+            isDeviceEmulationEnabled={this.state.isDeviceEmulationEnabled}
+          />
+        }
         <Viewport
           viewport={this.state.viewportMetadata}
           isInspectEnabled={this.state.isInspectEnabled}
@@ -328,7 +329,7 @@ class App extends React.Component<any, IState> {
     const panelTitle = currentEntry.title || currentEntry.url
 
     this.connection.send('extension.updateTitle', {
-      title: panelTitle,
+      title: this.state.isDebug ? 'Devtools' : panelTitle,
     })
   }
 

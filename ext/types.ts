@@ -5,4 +5,5 @@ export interface ExtensionConfiguration {
   isVerboseMode?: boolean
   startUrl?: string
   columnNumber: number
+  idDebug?: boolean
 }

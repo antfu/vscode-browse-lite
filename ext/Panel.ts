@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { Disposable, env, Position, TextDocument, Uri, ViewColumn, window, WebviewPanel, workspace, Selection } from 'vscode'
+import { Disposable, env, Position, TextDocument, Uri, ViewColumn, window, WebviewPanel, workspace, Selection, commands } from 'vscode'
 import { EventEmitter2 } from 'eventemitter2'
 
 import { BrowserClient } from './BrowserClient'
@@ -17,14 +17,24 @@ export class Panel extends EventEmitter2 {
   public browserPage: BrowserPage | null
   private browser: BrowserClient
   public config: ExtensionConfiguration
+  public parentPanel: Panel | undefined
+  public debugPanel: Panel | undefined
 
-  constructor(config: ExtensionConfiguration, browser: BrowserClient) {
+  constructor(config: ExtensionConfiguration, browser: BrowserClient, parentPanel?: Panel) {
     super()
     this.config = config
     this._panel = null
     this.browserPage = null
     this.browser = browser
+    this.parentPanel = parentPanel
     this.contentProvider = new ContentProvider(this.config)
+
+    if (parentPanel)
+      parentPanel.once('disposed', () => this.dispose())
+  }
+
+  get isDebugPage() {
+    return !!this.parentPanel
   }
 
   public async launch(startUrl?: string) {
@@ -40,15 +50,10 @@ export class Panel extends EventEmitter2 {
     catch (err) {
       window.showErrorMessage(err.message)
     }
-    // let columnNumber = <number>this.config.columnNumber;
-    // var column = <any>ViewColumn[columnNumber];
-    const showOptions = {
-      viewColumn: ViewColumn.Two,
-    }
     this._panel = window.createWebviewPanel(
       Panel.viewType,
       'Browse Lite',
-      showOptions,
+      ViewColumn.Two,
       {
         enableScripts: true,
         retainContextWhenHidden: true,
@@ -59,7 +64,7 @@ export class Panel extends EventEmitter2 {
     )
     this._panel.webview.html = this.contentProvider.getContent()
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
-    this._panel.onDidChangeViewState(() => this.emit(this._panel.visible ? 'focus' : 'blur'), null, this._disposables)
+    this._panel.onDidChangeViewState(() => this.emit(this._panel.active ? 'focus' : 'blur'), null, this._disposables)
     this._panel.webview.onDidReceiveMessage(
       (msg) => {
         if (msg.type === 'extension.updateTitle') {
@@ -138,10 +143,32 @@ export class Panel extends EventEmitter2 {
 
     this._panel.webview.postMessage({
       method: 'extension.appConfiguration',
-      result: this.config,
+      result: {
+        ...this.config,
+        isDebug: this.isDebugPage,
+      },
     })
 
     this.emit('focus')
+  }
+
+  public async createDebugPanel() {
+    if (this.isDebugPage)
+      return
+    if (this.debugPanel)
+      return this.debugPanel
+
+    const panel = new Panel(this.config, this.browser, this)
+    this.debugPanel = panel
+    panel.on('focus', () => {
+      commands.executeCommand('setContext', 'browse-lite-debug-active', true)
+    })
+    panel.on('blur', () => {
+      commands.executeCommand('setContext', 'browse-lite-debug-active', false)
+    })
+    panel.once('disposed', () => this.debugPanel = undefined)
+    await panel.launch(`http://localhost:9222/devtools/inspector.html?ws=localhost:9222/devtools/page/${this.browserPage.id}&experiments=true`)
+    return panel
   }
 
   public reload() {

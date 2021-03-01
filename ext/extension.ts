@@ -40,5 +40,10 @@ export function activate(ctx: ExtensionContext) {
     commands.registerCommand('browse-lite.controls.external', () => {
       manager.current?.openExternal(true)
     }),
+
+    commands.registerCommand('browse-lite.controls.debug', async() => {
+      const panel = await manager.current?.createDebugPanel()
+      panel?.show()
+    }),
   )
 }
