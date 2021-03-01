@@ -6,7 +6,6 @@ import { BrowserClient } from './BrowserClient'
 import { BrowserPage } from './BrowserPage'
 import { ExtensionConfiguration } from './types'
 import { ContentProvider } from './ContentProvider'
-import { isDarkTheme } from './Config'
 
 export class Panel extends EventEmitter2 {
   private static readonly viewType = 'browse-lite'

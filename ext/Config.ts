@@ -1,11 +1,11 @@
 import { workspace } from 'vscode'
 
-export function getConfig<T>(key: string) {
-  return workspace.getConfiguration().get<T>(key)
+export function getConfig<T>(key: string, v?: T) {
+  return workspace.getConfiguration().get<T>(key, v)
 }
 
 export function isDarkTheme() {
-  const theme = (getConfig<string>('workbench.colorTheme') || '').toLowerCase()
+  const theme = getConfig('workbench.colorTheme', '').toLowerCase()
 
   // must be dark
   if (theme.match(/dark|black/i) != null)
