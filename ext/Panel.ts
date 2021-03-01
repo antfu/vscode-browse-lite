@@ -138,6 +138,9 @@ export class Panel extends EventEmitter2 {
       this._disposables,
     )
 
+    if (this.isDebugPage)
+      this.browserPage.page.evaluate('localStorage.setItem("screencastEnabled", "false");localStorage.setItem("panel-selectedTab","console");')
+
     this.browserPage.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: isDarkTheme() ? 'dark' : 'light' }])
 
     if (startUrl) {
