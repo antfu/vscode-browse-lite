@@ -55,7 +55,7 @@
         "category": "Browse Lite",
         "command": "browse-lite.controls.debug",
         "title": "Open debug page",
-        "icon": "$(debug)"
+        "icon": "$(bug)"
       }
     ],
     "configuration": {
@@ -252,28 +252,27 @@
     "@chiragrupani/karma-chromium-edge-launcher": "^2.1.0",
     "browser-viewport-device-descriptions": "^1.1.0",
     "element-to-source": "^1.0.1",
-    "event-emitter-enhancer": "^1.0.57",
-    "eventemitter2": "^5.0.1",
-    "get-port": "^4.1.0",
+    "event-emitter-enhancer": "^2.0.0",
+    "eventemitter2": "^6.4.4",
+    "get-port": "^5.1.1",
     "karma-chrome-launcher": "^3.1.0",
-    "lodash": "^4.17.15",
-    "puppeteer-core": "^1.11.0",
-    "re-resizable": "^4.11.0",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "lodash": "^4.17.21",
+    "puppeteer-core": "^8.0.0",
+    "re-resizable": "^6.9.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.4.3",
-    "@types/jest": "23.3.12",
+    "@types/jest": "26.0.20",
     "@types/karma-chrome-launcher": "^3.1.0",
-    "@types/lodash": "^4.14.119",
-    "@types/node": "10.12.18",
+    "@types/lodash": "^4.14.168",
+    "@types/node": "14.14.31",
     "@types/puppeteer-core": "^5.4.0",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/vscode": "^1.53.0",
     "eslint": "^7.21.0",
-    "nanoid": "^3.1.20",
     "react-scripts": "^4.0.3",
     "tsup": "^4.5.1",
     "typescript": "4.1.3"

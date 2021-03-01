@@ -53,7 +53,7 @@ export class Panel extends EventEmitter2 {
     this._panel = window.createWebviewPanel(
       Panel.viewType,
       'Browse Lite',
-      ViewColumn.Two,
+      this.isDebugPage ? ViewColumn.Three : ViewColumn.Two,
       {
         enableScripts: true,
         retainContextWhenHidden: true,

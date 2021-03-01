@@ -1,7 +1,7 @@
 import * as React from 'react'
 import './viewport.css'
 
-import Resizable from 're-resizable'
+import { Resizable } from 're-resizable'
 import debounce from 'lodash/debounce'
 import Loading from '../loading-bar/loading-bar'
 import Screencast from '../screencast/screencast'
