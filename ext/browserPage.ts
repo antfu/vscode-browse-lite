@@ -1,16 +1,17 @@
 import { EventEmitter } from 'events'
 import EventEmitterEnhancer from 'event-emitter-enhancer'
+import { Browser, CDPSession, Page } from 'puppeteer-core'
 import Clipboard from './clipboard'
 
 const EnhancedEventEmitter: any = EventEmitterEnhancer.extend(EventEmitter)
 
 export default class BrowserPage extends EnhancedEventEmitter {
-  private client: any
-  private browser: any
+  private client: CDPSession
+  private browser: Browser
   private clipboard: Clipboard
-  public page: any
+  public page: Page
 
-  constructor(browser: any) {
+  constructor(browser: Browser) {
     super()
     this.browser = browser
     this.clipboard = new Clipboard()
@@ -87,8 +88,10 @@ export default class BrowserPage extends EnhancedEventEmitter {
     this.page = await this.browser.newPage()
     this.client = await this.page.target().createCDPSession()
 
+    // @ts-expect-error
     EventEmitterEnhancer.modifyInstance(this.client)
 
+    // @ts-expect-error
     this.client.else((action: string, data: object) => {
       // console.log('◀ browserPage.received', action)
       this.emit({

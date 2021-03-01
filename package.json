@@ -255,8 +255,10 @@
   "devDependencies": {
     "@antfu/eslint-config": "^0.4.3",
     "@types/jest": "23.3.12",
+    "@types/karma-chrome-launcher": "^3.1.0",
     "@types/lodash": "^4.14.119",
     "@types/node": "10.12.18",
+    "@types/puppeteer-core": "^5.4.0",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/vscode": "^1.53.0",

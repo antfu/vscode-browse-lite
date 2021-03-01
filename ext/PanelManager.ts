@@ -8,7 +8,7 @@ import { Panel } from './Panel'
 export class PanelManager extends EventEmitter.EventEmitter2 {
   public panels: Set<Panel>
   public current: Panel | undefined
-  private browser: any
+  private browser: Browser
   private defaultConfig: ExtensionConfiguration
 
   constructor(extensionPath: string) {

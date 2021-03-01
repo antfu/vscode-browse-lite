@@ -5,14 +5,13 @@ import * as os from 'os'
 import * as vscode from 'vscode'
 import * as edge from '@chiragrupani/karma-chromium-edge-launcher'
 import * as chrome from 'karma-chrome-launcher'
+import puppeteer from 'puppeteer-core'
+import getPort from 'get-port'
 import { ExtensionConfiguration } from './types'
 import BrowserPage from './browserPage'
 
-const puppeteer = require('puppeteer-core')
-const getPort = require('get-port')
-
 export default class Browser extends EventEmitter {
-  private browser: any
+  private browser: puppeteer.Browser
   public remoteDebugPort = 0
 
   constructor(private config: ExtensionConfiguration) {
@@ -76,9 +75,8 @@ export default class Browser extends EventEmitter {
       if (foundPath) return
       if (!key.startsWith('launcher')) return
 
-      const info: typeof import('karma-chrome-launcher').example
-        // @ts-ignore
-        = chrome[key] || edge[key]
+      // @ts-ignore
+      const info: typeof import('karma-chrome-launcher').example = chrome[key] || edge[key]
 
       if (!info[1].prototype) return
       if (!info[1].prototype.DEFAULT_CMD) return
