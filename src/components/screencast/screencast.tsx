@@ -59,6 +59,11 @@ class Screencast extends React.Component<any, any> {
     const canvasStyle = {
       cursor: this.props.viewportMetadata?.cursor || 'auto',
       outline: 'none',
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      maxHeight: 'unset',
+      maxWidth: 'unset',
     }
     const base64Data = this.props.frame?.base64Data
     const format = this.props.format

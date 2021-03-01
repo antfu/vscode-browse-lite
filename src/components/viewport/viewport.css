@@ -11,10 +11,6 @@
   align-items: center;
 }
 
-.viewport-resizable-wrap {
-  box-shadow: 0 0 300px -50px rgba(0, 0, 0, 0.59);
-}
-
 .viewport-resizer {
   background: var(--vscode-button-secondaryBackground);
 }
