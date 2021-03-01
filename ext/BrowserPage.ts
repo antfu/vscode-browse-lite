@@ -1,6 +1,7 @@
 import EventEmitterEnhancer, { EnhancedEventEmitter } from 'event-emitter-enhancer'
 import { Browser, CDPSession, Page } from 'puppeteer-core'
 import { Clipboard } from './Clipboard'
+import { isDarkTheme } from './Config'
 
 export class BrowserPage extends EnhancedEventEmitter {
   private client: CDPSession
@@ -68,6 +69,12 @@ export class BrowserPage extends EnhancedEventEmitter {
   }
 
   public async launch(): Promise<void> {
+    this.page.evaluateOnNewDocument(() => {
+      localStorage.setItem('screencastEnabled', 'false')
+      localStorage.setItem('panel-selectedTab', 'console')
+    })
+    this.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: isDarkTheme() ? 'dark' : 'light' }])
+
     this.client = await this.page.target().createCDPSession()
 
     // @ts-expect-error
