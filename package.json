@@ -1,7 +1,7 @@
 {
   "name": "browse-lite",
   "displayName": "Browse Lite",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Embedded browser in VS Code.",
   "categories": [
     "Other"
