@@ -1,14 +1,14 @@
 import * as path from 'path'
 import { Disposable, env, Position, TextDocument, Uri, ViewColumn, window, WebviewPanel, workspace, Selection } from 'vscode'
-import * as EventEmitter from 'eventemitter2'
+import { EventEmitter2 } from 'eventemitter2'
+import { nanoid } from 'nanoid'
 
-import Browser from './browser'
-import BrowserPage from './browserPage'
+import { BrowserClient } from './BrowserClient'
+import { BrowserPage } from './BrowserPage'
 import { ExtensionConfiguration } from './types'
-import ContentProvider from './contentProvider'
-const uuidv4 = require('uuid/v4')
+import { ContentProvider } from './ContentProvider'
 
-export class Panel extends EventEmitter.EventEmitter2 {
+export class Panel extends EventEmitter2 {
   private static readonly viewType = 'browse-lite'
   private _panel: WebviewPanel | null
   private _disposables: Disposable[] = []
@@ -16,18 +16,18 @@ export class Panel extends EventEmitter.EventEmitter2 {
   private state = {}
   private contentProvider: ContentProvider
   public browserPage: BrowserPage | null
-  private browser: Browser
+  private browser: BrowserClient
   public id: string
   public config: ExtensionConfiguration
 
-  constructor(config: ExtensionConfiguration, browser: Browser, id?: string) {
+  constructor(config: ExtensionConfiguration, browser: BrowserClient, id?: string) {
     super()
     this.config = config
     this._panel = null
     this.browserPage = null
     this.browser = browser
     this.contentProvider = new ContentProvider(this.config)
-    this.id = id || uuidv4()
+    this.id = id || nanoid()
   }
 
   public async launch(startUrl?: string) {

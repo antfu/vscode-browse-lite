@@ -1,14 +1,9 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { join } from 'path'
 import { Uri } from 'vscode'
+import { ExtensionConfiguration } from './types'
 
-export default class ContentProvider {
-  private config: any
-
-  constructor(config: any) {
-    this.config = config
-  }
+export class ContentProvider {
+  constructor(private config: ExtensionConfiguration) { }
 
   getContent() {
     const root = join(this.config.extensionPath, 'build')

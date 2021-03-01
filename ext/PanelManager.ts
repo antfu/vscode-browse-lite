@@ -1,14 +1,14 @@
 import { commands, workspace } from 'vscode'
 import * as EventEmitter from 'eventemitter2'
 
-import Browser from './browser'
+import { BrowserClient } from './BrowserClient'
 import { ExtensionConfiguration } from './types'
 import { Panel } from './Panel'
 
 export class PanelManager extends EventEmitter.EventEmitter2 {
   public panels: Set<Panel>
   public current: Panel | undefined
-  private browser: Browser
+  private browser: BrowserClient
   private defaultConfig: ExtensionConfiguration
 
   constructor(extensionPath: string) {
@@ -53,7 +53,7 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     const config = { ...this.defaultConfig }
 
     if (!this.browser)
-      this.browser = new Browser(config)
+      this.browser = new BrowserClient(config)
 
     const panel = new Panel(config, this.browser, id)
 

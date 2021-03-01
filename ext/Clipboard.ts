@@ -1,6 +1,6 @@
 import { env } from 'vscode'
 
-export default class Clipboard {
+export class Clipboard {
   writeText(value: string): Thenable<void> {
     return env.clipboard.writeText(value)
   }

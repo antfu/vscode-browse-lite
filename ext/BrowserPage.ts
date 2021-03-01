@@ -1,11 +1,8 @@
-import { EventEmitter } from 'events'
-import EventEmitterEnhancer from 'event-emitter-enhancer'
+import EventEmitterEnhancer, { EnhancedEventEmitter } from 'event-emitter-enhancer'
 import { Browser, CDPSession, Page } from 'puppeteer-core'
-import Clipboard from './clipboard'
+import { Clipboard } from './Clipboard'
 
-const EnhancedEventEmitter: any = EventEmitterEnhancer.extend(EventEmitter)
-
-export default class BrowserPage extends EnhancedEventEmitter {
+export class BrowserPage extends EnhancedEventEmitter {
   private client: CDPSession
   private browser: Browser
   private clipboard: Clipboard
@@ -19,6 +16,7 @@ export default class BrowserPage extends EnhancedEventEmitter {
 
   public dispose() {
     this.removeAllElseListeners()
+    // @ts-expect-error
     this.removeAllListeners()
     this.client.detach()
     this.page.close()
@@ -26,7 +24,6 @@ export default class BrowserPage extends EnhancedEventEmitter {
 
   public async send(action: string, data: object = {}, callbackId?: number) {
     // console.log('► browserPage.send', action)
-
     switch (action) {
       case 'Page.goForward':
         await this.page.goForward()
@@ -35,36 +32,18 @@ export default class BrowserPage extends EnhancedEventEmitter {
         await this.page.goBack()
         break
       case 'Clipboard.readText':
-        this.clipboard.readText().then(
-          (result: any) => {
-            this.emit({
-              callbackId,
-              result,
-            })
-          },
-          (err: any) => {
-            this.emit({
-              callbackId,
-              error: err.message,
-            })
-          },
-        )
-        break
-      case 'Clipboard.writeText':
-        this.clipboard.writeText((data as any).value).then(
-          (result: any) => {
-            this.emit({
-              callbackId,
-              result,
-            })
-          },
-          (err: any) => {
-            this.emit({
-              callbackId,
-              error: err.message,
-            })
-          },
-        )
+        try {
+          this.emit({
+            callbackId,
+            result: await this.clipboard.readText(),
+          } as any)
+        }
+        catch (e) {
+          this.emit({
+            callbackId,
+            error: e.message,
+          } as any)
+        }
         break
       default:
         this.client
@@ -73,13 +52,13 @@ export default class BrowserPage extends EnhancedEventEmitter {
             this.emit({
               callbackId,
               result,
-            })
+            } as any)
           })
           .catch((err: any) => {
             this.emit({
               callbackId,
               error: err.message,
-            })
+            } as any)
           })
     }
   }
@@ -97,7 +76,7 @@ export default class BrowserPage extends EnhancedEventEmitter {
       this.emit({
         method: action,
         result: data,
-      })
+      } as any)
     })
   }
 }

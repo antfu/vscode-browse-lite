@@ -1,28 +1,28 @@
-import * as vscode from 'vscode'
+import { commands, debug, ExtensionContext, Uri, window } from 'vscode'
 
-import DebugProvider from './debugProvider'
+import { DebugProvider } from './DebugProvider'
 import { PanelManager } from './PanelManager'
 
-export function activate(context: vscode.ExtensionContext) {
-  const windowManager = new PanelManager(context.extensionPath)
-  const debugProvider = new DebugProvider(windowManager)
+export function activate(ctx: ExtensionContext) {
+  const manager = new PanelManager(ctx.extensionPath)
+  const debugProvider = new DebugProvider(manager)
 
-  vscode.debug.registerDebugConfigurationProvider(
-    'browse-lite',
-    debugProvider.getProvider(),
-  )
+  ctx.subscriptions.push(
+    debug.registerDebugConfigurationProvider(
+      'browse-lite',
+      debugProvider.getProvider(),
+    ),
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand('browse-lite.open', (url?) => {
+    commands.registerCommand('browse-lite.open', (url?) => {
       // Handle VS Code URIs
-      if (url != null && url instanceof vscode.Uri && url.scheme === 'file')
+      if (url != null && url instanceof Uri && url.scheme === 'file')
         url = url.toString()
 
-      windowManager.create(url)
+      manager.create(url)
     }),
 
-    vscode.commands.registerCommand('browse-lite.openActiveFile', () => {
-      const activeEditor = vscode.window.activeTextEditor
+    commands.registerCommand('browse-lite.openActiveFile', () => {
+      const activeEditor = window.activeTextEditor
       if (!activeEditor)
         return // no active editor: ignore the command
 
@@ -30,15 +30,15 @@ export function activate(context: vscode.ExtensionContext) {
       const filename = activeEditor.document.fileName
 
       if (filename)
-        windowManager.create(`file://${filename}`)
+        manager.create(`file://${filename}`)
     }),
 
-    vscode.commands.registerCommand('browse-lite.controls.refresh', () => {
-      windowManager.current?.reload()
+    commands.registerCommand('browse-lite.controls.refresh', () => {
+      manager.current?.reload()
     }),
 
-    vscode.commands.registerCommand('browse-lite.controls.external', () => {
-      windowManager.current?.openExternal(true)
+    commands.registerCommand('browse-lite.controls.external', () => {
+      manager.current?.openExternal(true)
     }),
   )
 }

@@ -1,22 +1,18 @@
 import { window, CancellationToken, commands, debug, DebugConfiguration, DebugConfigurationProvider, DebugSession, ProviderResult, WorkspaceFolder } from 'vscode'
 import { PanelManager } from './PanelManager'
 
-export default class DebugProvider {
-  private mamager: PanelManager
-
-  constructor(windowManager: any) {
-    this.mamager = windowManager
-
+export class DebugProvider {
+  constructor(private manager: PanelManager) {
     debug.onDidTerminateDebugSession((e: DebugSession) => {
       if (e.name === 'Browse Lite: Launch' && e.configuration.urlFilter) {
         // TODO: Improve this with some unique ID per browser window instead of url, to avoid closing multiple instances
-        this.mamager.disposeByUrl(e.configuration.urlFilter)
+        this.manager.disposeByUrl(e.configuration.urlFilter)
       }
     })
   }
 
   getProvider(): DebugConfigurationProvider {
-    const manager = this.mamager
+    const manager = this.manager
 
     return {
       provideDebugConfigurations(
