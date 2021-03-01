@@ -2,8 +2,9 @@ import { commands, ExtensionContext } from 'vscode'
 import * as EventEmitter from 'eventemitter2'
 
 import { BrowserClient } from './BrowserClient'
-import { ExtensionConfiguration, getConfigs } from './Config'
+import { getConfigs } from './Config'
 import { Panel } from './Panel'
+import { ExtensionConfiguration } from './ExtensionConfiguration'
 
 export class PanelManager extends EventEmitter.EventEmitter2 {
   public panels: Set<Panel>
@@ -14,7 +15,6 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
   constructor(public readonly ctx: ExtensionContext) {
     super()
     this.panels = new Set()
-    this.refreshSettings()
     this.config = getConfigs(this.ctx)
 
     this.on('windowOpenRequested', (params) => {
