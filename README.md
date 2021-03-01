@@ -6,6 +6,9 @@
 Browse Lite
 </h1>
 <p align="center">
+Embedded browser in VS Code
+</p>
+<p align="center">
 <a href="https://marketplace.visualstudio.com/items?itemName=antfu.browse-lite" target="__blank"><img src="https://img.shields.io/visual-studio-marketplace/v/antfu.browse-lite.svg?color=228cb3&amp;label=" alt="Visual Studio Marketplace Version" /></a>
 </h1>
 
