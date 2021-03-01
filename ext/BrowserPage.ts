@@ -15,7 +15,6 @@ export class BrowserPage extends EnhancedEventEmitter {
   }
 
   get id(): string {
-    // @ts-expect-error
     return this.page.mainFrame()._id
   }
 
@@ -52,7 +51,7 @@ export class BrowserPage extends EnhancedEventEmitter {
         break
       default:
         this.client
-          .send(action, data)
+          .send(action as any, data)
           .then((result: any) => {
             this.emit({
               callbackId,

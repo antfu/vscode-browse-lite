@@ -6,6 +6,7 @@ import { BrowserClient } from './BrowserClient'
 import { BrowserPage } from './BrowserPage'
 import { ExtensionConfiguration } from './types'
 import { ContentProvider } from './ContentProvider'
+import { isDarkTheme } from './Config'
 
 export class Panel extends EventEmitter2 {
   private static readonly viewType = 'browse-lite'
@@ -50,6 +51,7 @@ export class Panel extends EventEmitter2 {
     catch (err) {
       window.showErrorMessage(err.message)
     }
+
     this._panel = window.createWebviewPanel(
       Panel.viewType,
       'Browse Lite',
@@ -135,6 +137,8 @@ export class Panel extends EventEmitter2 {
       null,
       this._disposables,
     )
+
+    this.browserPage.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: isDarkTheme() ? 'dark' : 'light' }])
 
     if (startUrl) {
       this.config.startUrl = startUrl
