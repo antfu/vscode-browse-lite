@@ -32,7 +32,7 @@
       {
         "category": "Browse Lite",
         "command": "browse-lite.open",
-        "title": "Open"
+        "title": "Open..."
       },
       {
         "category": "Browse Lite",
@@ -229,6 +229,20 @@
           "when": "resourceScheme == webview-panel && browse-lite-active && !browse-lite-debug-active",
           "command": "browse-lite.controls.debug",
           "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "browse-lite.controls.refresh",
+          "when": "false"
+        },
+        {
+          "command": "browse-lite.controls.external",
+          "when": "false"
+        },
+        {
+          "command": "browse-lite.controls.debug",
+          "when": "false"
         }
       ]
     }
