@@ -4,7 +4,7 @@ import { DebugProvider } from './DebugProvider'
 import { PanelManager } from './PanelManager'
 
 export function activate(ctx: ExtensionContext) {
-  const manager = new PanelManager(ctx.extensionPath)
+  const manager = new PanelManager(ctx)
   const debugProvider = new DebugProvider(manager)
 
   ctx.subscriptions.push(

@@ -4,7 +4,7 @@ import { EventEmitter2 } from 'eventemitter2'
 
 import { BrowserClient } from './BrowserClient'
 import { BrowserPage } from './BrowserPage'
-import { ExtensionConfiguration } from './types'
+import { ExtensionConfiguration } from './ExtensionConfiguration'
 import { ContentProvider } from './ContentProvider'
 
 export class Panel extends EventEmitter2 {
@@ -168,7 +168,8 @@ export class Panel extends EventEmitter2 {
       commands.executeCommand('setContext', 'browse-lite-debug-active', false)
     })
     panel.once('disposed', () => this.debugPanel = undefined)
-    await panel.launch(`http://localhost:9222/devtools/inspector.html?ws=localhost:9222/devtools/page/${this.browserPage.id}&experiments=true`)
+    const domain = `${this.config.debugHost}:${this.config.debugPort}`
+    await panel.launch(`http://${domain}/devtools/inspector.html?ws=${domain}/devtools/page/${this.browserPage.id}&experiments=true`)
     return panel
   }
 

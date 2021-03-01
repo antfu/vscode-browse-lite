@@ -3,15 +3,13 @@ import { platform } from 'os'
 import * as edge from '@chiragrupani/karma-chromium-edge-launcher'
 import * as chrome from 'karma-chrome-launcher'
 import puppeteer, { Browser } from 'puppeteer-core'
-import getPort from 'get-port'
 import { workspace } from 'vscode'
-import { ExtensionConfiguration } from './types'
+import { ExtensionConfiguration } from './ExtensionConfiguration'
+import { tryPort } from './Config'
 import { BrowserPage } from './BrowserPage'
 
 export class BrowserClient extends EventEmitter {
-  public pagesMap
   private browser: Browser
-  public remoteDebugPort = 0
 
   constructor(private config: ExtensionConfiguration) {
     super()
@@ -24,9 +22,9 @@ export class BrowserClient extends EventEmitter {
     if (this.config.chromeExecutable)
       chromePath = this.config.chromeExecutable
 
-    // Detect remote debugging port
-    this.remoteDebugPort = await getPort({ port: 9222, host: '127.0.0.1' })
-    chromeArgs.push(`--remote-debugging-port=${this.remoteDebugPort}`)
+    this.config.debugPort = await tryPort(this.config.debugPort)
+
+    chromeArgs.push(`--remote-debugging-port=${this.config.debugPort}`)
 
     if (!chromePath) {
       throw new Error(

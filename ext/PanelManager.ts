@@ -1,61 +1,43 @@
-import { commands, workspace } from 'vscode'
+import { commands, ExtensionContext } from 'vscode'
 import * as EventEmitter from 'eventemitter2'
 
 import { BrowserClient } from './BrowserClient'
-import { ExtensionConfiguration } from './types'
+import { ExtensionConfiguration, getConfigs } from './Config'
 import { Panel } from './Panel'
 
 export class PanelManager extends EventEmitter.EventEmitter2 {
   public panels: Set<Panel>
   public current: Panel | undefined
-  private browser: BrowserClient
-  private defaultConfig: ExtensionConfiguration
+  public browser: BrowserClient
+  public config: ExtensionConfiguration
 
-  constructor(extensionPath: string) {
+  constructor(public readonly ctx: ExtensionContext) {
     super()
     this.panels = new Set()
-    this.defaultConfig = {
-      extensionPath,
-      startUrl: 'https://github.com/antfu/vscode-browse-lite',
-      format: 'png',
-      columnNumber: 2,
-    }
     this.refreshSettings()
+    this.config = getConfigs(this.ctx)
 
     this.on('windowOpenRequested', (params) => {
       this.create(params.url)
     })
   }
 
-  private refreshSettings() {
-    const extensionSettings = workspace.getConfiguration('browse-lite')
-    if (extensionSettings) {
-      const chromeExecutable = extensionSettings.get<string>('chromeExecutable')
-      if (chromeExecutable !== undefined)
-        this.defaultConfig.chromeExecutable = chromeExecutable
+  private async refreshSettings() {
+    const prev = this.config
 
-      const startUrl = extensionSettings.get<string>('startUrl')
-      if (startUrl !== undefined)
-        this.defaultConfig.startUrl = startUrl
-
-      const isVerboseMode = extensionSettings.get<boolean>('verbose')
-      if (isVerboseMode !== undefined)
-        this.defaultConfig.isVerboseMode = isVerboseMode
-
-      const format = extensionSettings.get<string>('format')
-      if (format !== undefined)
-        this.defaultConfig.format = format.includes('png') ? 'png' : 'jpeg'
+    this.config = {
+      ...getConfigs(this.ctx),
+      debugPort: prev.debugPort,
     }
   }
 
   public async create(startUrl?: string) {
     this.refreshSettings()
-    const config = { ...this.defaultConfig }
 
     if (!this.browser)
-      this.browser = new BrowserClient(config)
+      this.browser = new BrowserClient(this.config)
 
-    const panel = new Panel(config, this.browser)
+    const panel = new Panel(this.config, this.browser)
 
     panel.once('disposed', () => {
       this.panels.delete(panel)
@@ -89,11 +71,11 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
 
     this.emit('windowCreated', panel)
 
-    return panel
-  }
+    this.ctx.subscriptions.push({
+      dispose: () => panel.dispose(),
+    })
 
-  public getDebugPort() {
-    return this.browser ? this.browser.remoteDebugPort : null
+    return panel
   }
 
   public disposeByUrl(url: string) {

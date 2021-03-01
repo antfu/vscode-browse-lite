@@ -2,7 +2,7 @@ import * as React from 'react'
 import './App.css'
 
 import { resolve as getElementSourceMetadata } from 'element-to-source'
-import { ExtensionConfiguration } from '../ext/types'
+import { ExtensionConfiguration } from '../ext/ExtensionConfiguration'
 import Toolbar from './components/toolbar/toolbar'
 import Viewport from './components/viewport/viewport'
 import Connection from './connection'

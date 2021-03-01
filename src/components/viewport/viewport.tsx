@@ -5,7 +5,6 @@ import { Resizable } from 're-resizable'
 import debounce from 'lodash/debounce'
 import Loading from '../loading-bar/loading-bar'
 import Screencast from '../screencast/screencast'
-import ViewportInfo from '../viewport-info/viewport-info'
 
 class Viewport extends React.Component<any, any> {
   private viewportRef: React.RefObject<HTMLDivElement>
@@ -91,7 +90,6 @@ class Viewport extends React.Component<any, any> {
         ref={this.viewportRef}
       >
         <Loading percent={this.viewportMetadata.loadingPercent} />
-        <ViewportInfo height={this.viewportMetadata.height} width={this.viewportMetadata.width} />
         <Resizable
           className="viewport-resizable-wrap"
           size={{

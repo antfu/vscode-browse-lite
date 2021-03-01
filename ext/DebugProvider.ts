@@ -55,7 +55,7 @@ export class DebugProvider {
         if (config && config.type === 'browse-lite') {
           if (config.request && config.request === 'attach') {
             debugConfig.name = 'Browse Lite: Attach'
-            debugConfig.port = manager.getDebugPort()
+            debugConfig.port = manager.config.debugPort
 
             if (debugConfig.port === null) {
               window.showErrorMessage(
@@ -78,7 +78,7 @@ export class DebugProvider {
 
             launch.then(() => {
               setTimeout(() => {
-                debugConfig.port = manager.getDebugPort()
+                debugConfig.port = manager.config.debugPort
                 debug.startDebugging(folder, debugConfig)
               }, 1000)
             })
