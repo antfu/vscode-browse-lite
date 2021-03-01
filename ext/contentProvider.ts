@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import * as path from 'path'
+import { join } from 'path'
 import { Uri } from 'vscode'
 
 export default class ContentProvider {
@@ -11,47 +11,25 @@ export default class ContentProvider {
   }
 
   getContent() {
-    const manifest = require(path.join(
-      this.config.extensionPath,
-      'build',
-      'asset-manifest.json',
-    )).files
+    const root = join(this.config.extensionPath, 'build')
+    const manifest = require(join(root, 'asset-manifest.json')).files
     const mainScript = manifest['main.js']
     const mainStyle = manifest['main.css']
     const runtimeScript = manifest['runtime-main.js']
 
-    // finding potential list of js chunk files
-    const chunkScriptsUri = []
-    for (const key of Object.keys(manifest)) {
-      if (key.endsWith('.chunk.js')) {
-        // finding their paths on the disk
-        const chunkScriptUri = Uri.file(
-          path.join(this.config.extensionPath, 'build', manifest[key]),
-        ).with({
-          scheme: 'vscode-resource',
-        })
-        // push the chunk Uri to the list of chunks
-        chunkScriptsUri.push(chunkScriptUri)
-      }
+    function getUri(path?: string) {
+      return Uri.file(path ? join(root, path) : root).with({ scheme: 'vscode-resource' })
     }
 
-    const runtimescriptPathOnDisk = Uri.file(
-      path.join(this.config.extensionPath, 'build', runtimeScript),
-    )
-    const runtimescriptUri = runtimescriptPathOnDisk.with({
-      scheme: 'vscode-resource',
-    })
-    const mainScriptPathOnDisk = Uri.file(
-      path.join(this.config.extensionPath, 'build', mainScript),
-    )
-    const mainScriptUri = mainScriptPathOnDisk.with({ scheme: 'vscode-resource' })
+    const base = getUri()
+    const runtimescriptUri = getUri(runtimeScript)
+    const mainScriptUri = getUri(mainScript)
+    const styleUri = getUri(mainStyle)
 
-    const stylePathOnDisk = Uri.file(
-      path.join(this.config.extensionPath, 'build', mainStyle),
-    )
-    const styleUri = stylePathOnDisk.with({ scheme: 'vscode-resource' })
-    const base = Uri.file(path.join(this.config.extensionPath, 'build')).with({ scheme: 'vscode-resource' })
-    const scripts = chunkScriptsUri.map(item => `<script src="${item}"></script>`)
+    const chunks = Object.keys(manifest)
+      .filter(key => key.endsWith('.chunk.js'))
+      .map(key => getUri(manifest[key]))
+      .map(item => `<script src="${item}"></script>`)
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -64,7 +42,7 @@ export default class ContentProvider {
 <body>
     <div id="root"></div>
     <script src="${runtimescriptUri}"></script>
-    ${scripts}
+    ${chunks}
     <script src="${mainScriptUri}"></script>
 </body>
 </html>`
