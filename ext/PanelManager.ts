@@ -48,24 +48,23 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     }
   }
 
-  public async create(startUrl?: string, id?: string) {
+  public async create(startUrl?: string) {
     this.refreshSettings()
     const config = { ...this.defaultConfig }
 
     if (!this.browser)
       this.browser = new BrowserClient(config)
 
-    const panel = new Panel(config, this.browser, id)
+    const panel = new Panel(config, this.browser)
 
     panel.once('disposed', () => {
-      const id = panel.id
       this.panels.delete(panel)
       if (this.panels.size === 0) {
         this.browser.dispose()
         this.browser = null
       }
 
-      this.emit('windowDisposed', id)
+      this.emit('windowDisposed', panel)
     })
 
     panel.on('windowOpenRequested', (params) => {
@@ -88,7 +87,7 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
 
     await panel.launch(startUrl)
 
-    this.emit('windowCreated', panel.id)
+    this.emit('windowCreated', panel)
 
     return panel
   }
@@ -102,23 +101,5 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
       if (b.config.startUrl === url)
         b.dispose()
     })
-  }
-
-  public getByUrl(url: string): Panel | undefined {
-    let match
-    this.panels.forEach((b: Panel) => {
-      if (b.config.startUrl === url)
-        match = b
-    })
-    return match
-  }
-
-  public getById(id: string): Panel | undefined {
-    let match
-    this.panels.forEach((b: Panel) => {
-      if (b.id === id)
-        match = b
-    })
-    return match
   }
 }

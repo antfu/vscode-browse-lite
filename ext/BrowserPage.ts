@@ -4,14 +4,19 @@ import { Clipboard } from './Clipboard'
 
 export class BrowserPage extends EnhancedEventEmitter {
   private client: CDPSession
-  private browser: Browser
   private clipboard: Clipboard
-  public page: Page
 
-  constructor(browser: Browser) {
+  constructor(
+    public readonly browser: Browser,
+    public readonly page: Page,
+  ) {
     super()
-    this.browser = browser
     this.clipboard = new Clipboard()
+  }
+
+  get id(): string {
+    // @ts-expect-error
+    return this.page.mainFrame()._id
   }
 
   public dispose() {
@@ -64,7 +69,6 @@ export class BrowserPage extends EnhancedEventEmitter {
   }
 
   public async launch(): Promise<void> {
-    this.page = await this.browser.newPage()
     this.client = await this.page.target().createCDPSession()
 
     // @ts-expect-error

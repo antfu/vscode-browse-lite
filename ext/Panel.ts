@@ -1,7 +1,6 @@
 import * as path from 'path'
 import { Disposable, env, Position, TextDocument, Uri, ViewColumn, window, WebviewPanel, workspace, Selection } from 'vscode'
 import { EventEmitter2 } from 'eventemitter2'
-import { nanoid } from 'nanoid'
 
 import { BrowserClient } from './BrowserClient'
 import { BrowserPage } from './BrowserPage'
@@ -17,17 +16,15 @@ export class Panel extends EventEmitter2 {
   private contentProvider: ContentProvider
   public browserPage: BrowserPage | null
   private browser: BrowserClient
-  public id: string
   public config: ExtensionConfiguration
 
-  constructor(config: ExtensionConfiguration, browser: BrowserClient, id?: string) {
+  constructor(config: ExtensionConfiguration, browser: BrowserClient) {
     super()
     this.config = config
     this._panel = null
     this.browserPage = null
     this.browser = browser
     this.contentProvider = new ContentProvider(this.config)
-    this.id = id || nanoid()
   }
 
   public async launch(startUrl?: string) {

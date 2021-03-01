@@ -9,6 +9,7 @@ import { ExtensionConfiguration } from './types'
 import { BrowserPage } from './BrowserPage'
 
 export class BrowserClient extends EventEmitter {
+  public pagesMap
   private browser: Browser
   public remoteDebugPort = 0
 
@@ -43,19 +44,22 @@ export class BrowserClient extends EventEmitter {
       args: chromeArgs,
       ignoreHTTPSErrors,
     })
+
+    // close the initial empty page
+    ;(await this.browser.pages()).map(i => i.close())
   }
 
   public async newPage(): Promise<BrowserPage> {
     if (!this.browser)
       await this.launchBrowser()
 
-    const page = new BrowserPage(this.browser)
+    const page = new BrowserPage(this.browser, await this.browser.newPage())
     await page.launch()
     return page
   }
 
   public dispose(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.browser) {
         this.browser.close()
         this.browser = null
