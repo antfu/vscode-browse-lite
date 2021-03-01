@@ -16,7 +16,7 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     this.panels = new Set()
     this.defaultConfig = {
       extensionPath,
-      startUrl: 'http://code.visualstudio.com',
+      startUrl: 'https://github.com/antfu/vscode-browse-lite',
       format: 'png',
       columnNumber: 2,
     }
@@ -48,14 +48,6 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     }
   }
 
-  getLastColumnNumber() {
-    const lastWindow = Array.from(this.panels).pop()
-    if (lastWindow)
-      return lastWindow.config.columnNumber
-
-    return 1
-  }
-
   public async create(startUrl?: string, id?: string) {
     this.refreshSettings()
     const config = { ...this.defaultConfig }
@@ -63,13 +55,8 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     if (!this.browser)
       this.browser = new Browser(config)
 
-    const lastColumnNumber = this.getLastColumnNumber()
-    if (lastColumnNumber)
-      config.columnNumber = lastColumnNumber + 1
-
     const panel = new Panel(config, this.browser, id)
 
-    await panel.launch(startUrl)
     panel.once('disposed', () => {
       const id = panel.id
       this.panels.delete(panel)
@@ -99,10 +86,9 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
 
     this.panels.add(panel)
 
-    this.emit('windowCreated', panel.id)
+    await panel.launch(startUrl)
 
-    this.current = panel
-    commands.executeCommand('setContext', 'browse-lite-active', true)
+    this.emit('windowCreated', panel.id)
 
     return panel
   }

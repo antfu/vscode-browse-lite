@@ -1,33 +1,35 @@
 .device-settings {
   display: none;
-  border-top: 1px solid #d1d1d1;
+  padding: 8px;
+}
+
+.device-settings * {
+  vertical-align: middle;
 }
 
 .device-settings.active {
   display: block;
 }
 
-select {
-  background: transparent;
-  border: none;
-  font-size: 11px;
+.device-selector {
   height: 29px;
-  padding: 5px; /* If you add too much padding here, the options won't show in IE */
+  margin: 0 8px;
+  padding: 6px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .viewport-size-input {
-  max-width: 45px;
+  max-width: 50px;
+  height: 29px;
+  box-sizing: border-box;
   text-align: center;
-  background: #f0f0f0;
-  box-shadow: none;
-  border: 1px solid transparent;
   outline: 0;
-}
-
-.viewport-size-input:active,
-.viewport-size-input:focus {
-  border: 1px solid #d3d3d3;
-  background: #fff;
+  -moz-appearance: textfield;
 }
 
 .metadata .spacer {

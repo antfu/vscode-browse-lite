@@ -104,13 +104,10 @@ class UrlInput extends React.Component<any, IUrlInputState> {
   }
 
   public render() {
-    const className = ['urlbar']
-    if (this.state.isFocused)
-      className.push('focused')
-
     return (
-      <div className={className.join(' ')}>
+      <>
         <input
+          className="urlbar"
           type="text"
           ref={this.setRef}
           value={this.state.url}
@@ -121,7 +118,7 @@ class UrlInput extends React.Component<any, IUrlInputState> {
           onContextMenu={this.handleContextMenu}
         />
         <ContextMenu {...this.state.contextMenuProps} />
-      </div>
+      </>
     )
   }
 

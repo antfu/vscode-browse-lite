@@ -45,5 +45,5 @@ button:disabled {
 }
 
 button.active {
-  background-color: #d5d5d5;
+  background-color: var(--vscode-button-secondaryBackground);
 }

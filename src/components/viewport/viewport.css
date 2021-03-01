@@ -1,6 +1,6 @@
 .viewport {
   display: flex;
-  background: #fff;
+  background: var(---vscode-background);
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
@@ -16,11 +16,11 @@
 }
 
 .viewport-resizer {
-  background: rgba(240, 240, 240, 1);
+  background: var(--vscode-button-secondaryBackground);
 }
 
 .viewport-resizer:hover {
-  background-color: rgb(207, 207, 207);
+  background-color: var(--vscode-button-secondaryHoverBackground);
 }
 
 .resizer-top {

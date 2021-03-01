@@ -87,7 +87,7 @@ class DeviceSettings extends React.Component<any, any> {
           />
         </span>
 
-        <select className="zoom-selector" value="fit" onChange={this.handleZoomChange}>
+        <select className="device-selector" value="fit" onChange={this.handleZoomChange}>
           {zoomLevels.map((level: any) => {
             return (
               <option key={level.value} value={level.value}>

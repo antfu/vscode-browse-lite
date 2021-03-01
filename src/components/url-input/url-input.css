@@ -1,27 +1,25 @@
 .urlbar {
   display: flex;
   flex: 1;
-  background: var(--vscode-input-background);
-  border: 1px solid var(--vscode-input-border);
-  border-radius: 2px;
-  color: var(--vscode-input-foreground);
-  height: 29px;
-  overflow: hidden;
+  user-select: all;
   margin: 0 4px 0 4px;
   padding: 0 6px;
-}
-
-.urlbar input {
-  background: transparent;
-  color: var(--vscode-input-foreground);
   width: 100%;
-  border: 0;
-  outline: 0;
-  user-select: all;
+  height: 29px;
 }
 
-.focused {
-  box-shadow: inset 0 0 0 0.3px var(--vscode-inputOption-activeBorder);
+input, select {
+  color: var(--vscode-input-foreground);
+  border: 0;
+  outline: none !important;
+  border-radius: 2px;
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border);
+  color: var(--vscode-input-foreground);
+  overflow: hidden;
+}
+
+input:focus, select:focus, input:active, select:active {
   border-color: var(--vscode-inputOption-activeBorder);
   color: var(--vscode-inputOption-activeForeground);
 }
