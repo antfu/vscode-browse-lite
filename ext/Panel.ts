@@ -169,7 +169,10 @@ export class Panel extends EventEmitter2 {
     panel.on('blur', () => {
       commands.executeCommand('setContext', 'browse-lite-debug-active', false)
     })
-    panel.once('disposed', () => this.debugPanel = undefined)
+    panel.once('disposed', () => {
+      commands.executeCommand('setContext', 'browse-lite-debug-active', false)
+      this.debugPanel = undefined
+    })
     const domain = `${this.config.debugHost}:${this.config.debugPort}`
     await panel.launch(`http://${domain}/devtools/inspector.html?ws=${domain}/devtools/page/${this.browserPage.id}&experiments=true`)
     return panel

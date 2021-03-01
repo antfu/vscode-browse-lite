@@ -40,6 +40,10 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     const panel = new Panel(this.config, this.browser)
 
     panel.once('disposed', () => {
+      if (this.current === panel) {
+        this.current = undefined
+        commands.executeCommand('setContext', 'browse-lite-active', false)
+      }
       this.panels.delete(panel)
       if (this.panels.size === 0) {
         this.browser.dispose()

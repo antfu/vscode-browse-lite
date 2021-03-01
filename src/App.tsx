@@ -329,7 +329,7 @@ class App extends React.Component<any, IState> {
     const panelTitle = currentEntry.title || currentEntry.url
 
     this.connection.send('extension.updateTitle', {
-      title: this.state.isDebug ? 'Devtools' : panelTitle,
+      title: panelTitle,
     })
   }
 
