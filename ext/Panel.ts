@@ -12,6 +12,7 @@ export class Panel extends EventEmitter2 {
   private _panel: WebviewPanel | null
   private _disposables: Disposable[] = []
   public url = ''
+  public title = ''
   private state = {}
   private contentProvider: ContentProvider
   public browserPage: BrowserPage | null
@@ -69,8 +70,9 @@ export class Panel extends EventEmitter2 {
     this._panel.webview.onDidReceiveMessage(
       (msg) => {
         if (msg.type === 'extension.updateTitle') {
+          this.title = msg.params.title
           if (this._panel) {
-            this._panel.title = msg.params.title
+            this._panel.title = this.isDebugPage ? `DevTools - ${this.parentPanel.title}` : msg.params.title
             return
           }
         }
