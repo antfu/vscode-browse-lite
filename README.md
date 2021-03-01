@@ -14,12 +14,12 @@ Embedded browser in VS Code
 
 > Forked from [Browser Preview](https://github.com/auchenberg/vscode-browser-preview) by [Kenneth Auchenberg](https://github.com/auchenberg)
 
-- ⚡️ Faster page update
+- ⚡️ Faster page refreshing
 - 🌗 Dark mode aware
 - 🎨 Theme-aware UI
-- 🌍 Open in system browser
-- 🧑‍💻 Built-in devtools support
+- 🐞 Built-in devtools support
 - 🔌 Extendable actions
+- 🖥 Re-open in the system browser
 - ✅ No Telemetry
 
 <p align="center">
@@ -31,4 +31,20 @@ Embedded browser in VS Code
 <img width="1192" alt="Preview 2" src="https://user-images.githubusercontent.com/11247099/109469308-d1547680-7aa8-11eb-9957-23a4d8ac35e6.png">
 </p>
 
-This extension was built for [VS Code for Vite](https://marketplace.visualstudio.com/items?itemName=antfu.vite).
+This extension was originally built for [VS Code for Vite](https://github.com/antfu/vscode-vite).
+
+## Sponsors
+
+This project is part of my [Sponsor Program](https://github.com/sponsors/antfu) with **early access avaliable**.
+
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg">
+    <img src='https://cdn.jsdelivr.net/gh/antfu/static/sponsors.png'/>
+  </a>
+</p>
+
+## License
+
+MIT - Copyright (c) 2019 Kenneth Auchenberg
+
+MIT - Copyright (c) 2021 Anthony Fu
