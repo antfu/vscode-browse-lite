@@ -24,7 +24,7 @@ export default class BrowserPage extends EnhancedEventEmitter {
   }
 
   public async send(action: string, data: object = {}, callbackId?: number) {
-    console.log('► browserPage.send', action)
+    // console.log('► browserPage.send', action)
 
     switch (action) {
       case 'Page.goForward':
@@ -90,7 +90,7 @@ export default class BrowserPage extends EnhancedEventEmitter {
     EventEmitterEnhancer.modifyInstance(this.client)
 
     this.client.else((action: string, data: object) => {
-      console.log('◀ browserPage.received', action)
+      // console.log('◀ browserPage.received', action)
       this.emit({
         method: action,
         result: data,
