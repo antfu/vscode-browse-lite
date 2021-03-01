@@ -74,6 +74,7 @@ class Screencast extends React.Component<any, any> {
         ref={this.imageRef}
         style={canvasStyle}
         width={this.props.width}
+        draggable="false"
         onMouseDown={this.handleMouseEvent}
         onMouseUp={this.handleMouseEvent}
         onMouseMove={this.handleMouseEvent}
