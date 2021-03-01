@@ -63,27 +63,39 @@
       "type": "object",
       "properties": {
         "browse-lite.startUrl": {
-          "default": "https://code.visualstudio.com",
           "description": "The default start url for new Browse Lite instances",
           "type": "string"
         },
         "browse-lite.chromeExecutable": {
-          "default": "",
           "description": "The full path to the executable, including the complete filename of the executable",
           "type": "string"
         },
         "browse-lite.verbose": {
-          "default": "",
+          "default": false,
           "description": "Toggles verbose logging",
           "type": "boolean"
         },
+        "browse-lite.debugHost": {
+          "default": "localhost",
+          "description": "Host name for debug",
+          "type": "string"
+        },
+        "browse-lite.debugPort": {
+          "default": 9222,
+          "description": "Port number for debug, when occupied, it will try to find another one by self bumpping.",
+          "type": "number"
+        },
         "browse-lite.format": {
-          "default": "jpeg",
-          "description": "The type of image used in rendering preview. Supported values are: `jpeg` (default) and `png`",
+          "default": "png",
+          "enum": [
+            "png",
+            "jpeg"
+          ],
+          "description": "The type of image used in rendering preview.",
           "type": "string"
         },
         "browse-lite.ignoreHttpsErrors": {
-          "default": "",
+          "default": true,
           "description": "Ignore HTTPS errors if you are using self-signed SSL certificates",
           "type": "boolean"
         }
