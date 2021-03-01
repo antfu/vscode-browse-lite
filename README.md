@@ -35,7 +35,7 @@ This extension was originally built for [VS Code for Vite](https://github.com/an
 
 ## Sponsors
 
-This project is part of my [Sponsor Program](https://github.com/sponsors/antfu) with **early access avaliable**.
+This project is part of my [Sponsor Program](https://github.com/sponsors/antfu).
 
 <p align="center">
   <a href="https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg">
