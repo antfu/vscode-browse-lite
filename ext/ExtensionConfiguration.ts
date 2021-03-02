@@ -5,6 +5,8 @@ export interface ExtensionConfiguration {
   isVerboseMode: boolean
   startUrl: string
   columnNumber: number
+  quality: number
+  everyNthFrame: number
   isDebug?: boolean
   debugHost: string
   debugPort: number

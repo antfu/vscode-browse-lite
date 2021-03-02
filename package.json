@@ -98,6 +98,16 @@
           "default": true,
           "description": "Ignore HTTPS errors if you are using self-signed SSL certificates",
           "type": "boolean"
+        },
+        "browse-lite.quality": {
+          "default": 80,
+          "description": "Image quality of screencasting",
+          "type": "number"
+        },
+        "browse-lite.everyNthFrame": {
+          "default": 1,
+          "description": "Skip for frames of screencasting",
+          "type": "number"
         }
       }
     },

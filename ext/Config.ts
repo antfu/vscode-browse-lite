@@ -48,6 +48,8 @@ export function getConfigs(ctx: ExtensionContext): ExtensionConfiguration {
     extensionPath: ctx.extensionPath,
     columnNumber: 2,
     isDebug: false,
+    quality: getConfig('browse-lite.quality', 80),
+    everyNthFrame: getConfig('browse-lite.everyNthFrame', 1),
     format: getConfig('browse-lite.format', 'png'),
     isVerboseMode: getConfig('browse-lite.verbose', false),
     chromeExecutable: getConfig('browse-lite.chromeExecutable'),

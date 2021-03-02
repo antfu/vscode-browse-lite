@@ -19,6 +19,8 @@ interface IState {
   format: 'jpeg' | 'png'
   frame: object | null
   url: string
+  quality: number
+  everyNthFrame: number
   isDebug: boolean
   isVerboseMode: boolean
   isInspectEnabled: boolean
@@ -62,6 +64,8 @@ class App extends React.Component<any, IState> {
       frame: null,
       format: 'jpeg',
       url: 'about:blank',
+      quality: 80,
+      everyNthFrame: 1,
       isVerboseMode: false,
       isDebug: false,
       isInspectEnabled: false,
@@ -182,6 +186,9 @@ class App extends React.Component<any, IState> {
 
         this.updateState(Object.assign(payload, { url: payload.startUrl || this.state.url }))
 
+        this.stopCasting()
+        this.startCasting()
+
         if (payload.startUrl) {
           this.connection.send('Page.navigate', {
             url: payload.startUrl,
@@ -278,10 +285,11 @@ class App extends React.Component<any, IState> {
 
   public startCasting() {
     const params = {
-      quality: 80,
+      quality: this.state.quality,
       format: this.state.format,
       maxWidth: 2000,
       maxHeight: 2000,
+      everyNthFrame: this.state.everyNthFrame,
     }
 
     if (this.state.viewportMetadata.width) {

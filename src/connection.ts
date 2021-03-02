@@ -51,7 +51,7 @@ export default class Connection extends EventEmitter2 {
 
     if (object) {
       if (object.callbackId) {
-        this.logger.log(`◀ RECV callbackId: ${object.callbackId}`)
+        // this.logger.log(`◀ RECV callbackId: ${object.callbackId}`)
         const callback: any = this.callbacks.get(object.callbackId)
         // Callbacks could be all rejected if someone has called `.dispose()`.
         if (callback) {
@@ -63,7 +63,7 @@ export default class Connection extends EventEmitter2 {
         }
       }
       else {
-        this.logger.log(`◀ RECV method: ${object.method}`)
+        // this.logger.log(`◀ RECV method: ${object.method}`)
         this.emit(object.method, object.result)
       }
     }
