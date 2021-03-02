@@ -13,12 +13,12 @@ export function activate(ctx: ExtensionContext) {
       debugProvider.getProvider(),
     ),
 
-    commands.registerCommand('browse-lite.open', (url?) => {
+    commands.registerCommand('browse-lite.open', async(url?) => {
       // Handle VS Code URIs
       if (url != null && url instanceof Uri && url.scheme === 'file')
         url = url.toString()
 
-      manager.create(url)
+      return await manager.create(url)
     }),
 
     commands.registerCommand('browse-lite.openActiveFile', () => {

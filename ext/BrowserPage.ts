@@ -69,6 +69,7 @@ export class BrowserPage extends EnhancedEventEmitter {
   }
 
   public async launch(): Promise<void> {
+    // custom embedded devtools
     this.page.evaluateOnNewDocument(() => {
       localStorage.setItem('screencastEnabled', 'false')
       localStorage.setItem('panel-selectedTab', 'console')
