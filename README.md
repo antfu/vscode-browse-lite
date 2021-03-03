@@ -21,6 +21,7 @@ Embedded browser in VS Code
 - 🔌 Extendable actions
 - 🖥 Re-open in the system browser
 - ✅ No Telemetry
+- 🍃 Much lighter [`10.3MB` ➡️ `212KB`](https://user-images.githubusercontent.com/11247099/109819001-90a65a00-7c6e-11eb-8d82-465ec8b22eba.png)
 
 <p align="center">
 <table><tr><td>Run <b><code>Browse Lite: Open...</code></b> command to start the browser</tr></td></table>

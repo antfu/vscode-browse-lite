@@ -19,7 +19,7 @@
   "main": "./dist/extension.js",
   "scripts": {
     "build:dev": "vite build && npm run build:ts",
-    "build": "rimraf dist && vite build && npm run build:ts -- --minify --sourcemap",
+    "build": "rimraf dist && vite build && npm run build:ts -- --minify",
     "build:ts": "tsup src/extension.ts --external=vscode -d dist",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
