@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React from 'react'
+// @ts-ignore
+import devices from 'browser-viewport-device-descriptions'
 import './device-settings.css'
-
-const devices = require('browser-viewport-device-descriptions')
 
 class DeviceSettings extends React.Component<any, any> {
   private emulatedDevices: any[]

@@ -1,5 +1,5 @@
+import { EventEmitter2 } from 'eventemitter2'
 import Logger from './utils/logger'
-const EventEmitter2 = require('eventemitter2').EventEmitter2
 
 export default class Connection extends EventEmitter2 {
   private lastId: number

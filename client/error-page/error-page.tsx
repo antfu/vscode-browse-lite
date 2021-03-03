@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import './error-page.css'
 
 export function UimExclamationCircle(props: React.SVGProps<SVGSVGElement>) {

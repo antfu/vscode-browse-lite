@@ -61,7 +61,7 @@ export class Panel extends EventEmitter2 {
         enableScripts: true,
         retainContextWhenHidden: true,
         localResourceRoots: [
-          Uri.file(path.join(this.config.extensionPath, 'build')),
+          Uri.file(path.join(this.config.extensionPath, 'dist/client')),
         ],
       },
     )

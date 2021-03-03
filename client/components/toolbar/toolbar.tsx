@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import './toolbar.css'
 
 import UrlInput from '../url-input/url-input'

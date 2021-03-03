@@ -18,7 +18,7 @@
       "stopOnEntry": false,
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceRoot}/build/**/*.js"
+        "${workspaceRoot}/dist/extension.js"
       ],
       "preLaunchTask": "npm: build"
     }

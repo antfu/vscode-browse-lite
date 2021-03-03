@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 // import './screencast.css'
 
 // This implementation is heavily inspired by https://cs.chromium.org/chromium/src/third_party/blink/renderer/devtools/front_end/screencast/ScreencastView.js

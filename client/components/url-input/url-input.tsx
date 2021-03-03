@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import ContextMenu from '../contextmenu/contextmenu'
 import { IContextMenuProps } from '../contextmenu/contextmenu-models'
 import './url-input.css'
