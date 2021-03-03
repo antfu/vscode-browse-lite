@@ -280,6 +280,7 @@
     "element-to-source": "^1.0.1",
     "event-emitter-enhancer": "^2.0.0",
     "eventemitter2": "^6.4.4",
+    "find-up": "^5.0.0",
     "karma-chrome-launcher": "^3.1.0",
     "puppeteer-core": "^8.0.0"
   },

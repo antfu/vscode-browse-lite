@@ -1,3 +1,9 @@
-src
-ext
-tests
+/src
+/client
+/.github
+/.vscode
+yarn.lock
+
+node_modules/**/*.md
+node_modules/**/LICENSE*
+node_modules/**/Makefile
