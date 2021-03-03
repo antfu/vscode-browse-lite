@@ -20,6 +20,7 @@ export class Panel extends EventEmitter2 {
   public config: ExtensionConfiguration
   public parentPanel: Panel | undefined
   public debugPanel: Panel | undefined
+  public disposed = false
 
   constructor(config: ExtensionConfiguration, browser: BrowserClient, parentPanel?: Panel) {
     super()
@@ -215,6 +216,7 @@ export class Panel extends EventEmitter2 {
   }
 
   public dispose() {
+    this.disposed = true
     if (this._panel)
       this._panel.dispose()
 
