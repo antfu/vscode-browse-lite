@@ -110,7 +110,6 @@ class App extends React.Component<any, IState> {
       if (isMainFrame) {
         this.requestNavigationHistory()
         this.updateState({
-          ...this.state,
           viewportMetadata: {
             ...this.state.viewportMetadata,
             isLoading: true,
@@ -122,7 +121,6 @@ class App extends React.Component<any, IState> {
 
     this.connection.on('Page.loadEventFired', (result: any) => {
       this.updateState({
-        ...this.state,
         viewportMetadata: {
           ...this.state.viewportMetadata,
           loadingPercent: 1.0,
@@ -131,7 +129,6 @@ class App extends React.Component<any, IState> {
 
       setTimeout(() => {
         this.updateState({
-          ...this.state,
           viewportMetadata: {
             ...this.state.viewportMetadata,
             isLoading: false,
@@ -166,17 +163,17 @@ class App extends React.Component<any, IState> {
       this.startCasting()
     })
 
-    this.connection.on('Overlay.nodeHighlightRequested', (result: any) => {
-      console.log('nodeHighlightRequested', result)
+    // this.connection.on('Overlay.nodeHighlightRequested', (result: any) => {
+    //   console.log('nodeHighlightRequested', result)
 
-      // this.handleInspectHighlightRequested();
-    })
+    //   // this.handleInspectHighlightRequested();
+    // })
 
-    this.connection.on('Overlay.inspectNodeRequested', (result: any) => {
-      console.log('inspectNodeRequested', result)
+    // this.connection.on('Overlay.inspectNodeRequested', (result: any) => {
+    //   console.log('inspectNodeRequested', result)
 
-      // this.handleInspectHighlightRequested();
-    })
+    //   // this.handleInspectHighlightRequested();
+    // })
 
     this.connection.on(
       'extension.appConfiguration',
@@ -199,8 +196,7 @@ class App extends React.Component<any, IState> {
 
     this.connection.on('extension.viewport', (viewport: IViewport) => {
       this.handleViewportSizeChange(viewport)
-      this.enableViewportDeviceEmulation('Live Share')
-
+      // this.enableViewportDeviceEmulation('Live Share')
       // TODO: Scroll the page
     })
 
@@ -223,7 +219,6 @@ class App extends React.Component<any, IState> {
     this.requestNodeHighlighting()
 
     this.updateState({
-      ...this.state,
       frame: {
         base64Data: data,
         metadata,
@@ -326,7 +321,6 @@ class App extends React.Component<any, IState> {
       url = match[1]
 
     this.updateState({
-      ...this.state,
       url,
       history: {
         canGoBack: historyIndex === 0,
@@ -393,7 +387,6 @@ class App extends React.Component<any, IState> {
           newViewport.screenZoom = data.screenZoom
 
         await this.updateState({
-          ...this.state,
           viewportMetadata: {
             ...this.state.viewportMetadata,
             ...newViewport,
@@ -433,7 +426,6 @@ class App extends React.Component<any, IState> {
       }
 
       this.setState({
-        ...this.state,
         viewportMetadata: {
           ...this.state.viewportMetadata,
           highlightNode: {
@@ -462,7 +454,6 @@ class App extends React.Component<any, IState> {
   //   }
 
   //   this.setState({
-  //     ...this.state,
   //     viewportMetadata: {
   //       ...this.state.viewportMetadata,
   //       cursor: cursor
@@ -493,7 +484,6 @@ class App extends React.Component<any, IState> {
           return
 
         this.setState({
-          ...this.state,
           viewportMetadata: {
             ...this.state.viewportMetadata,
             highlightNode: {
@@ -601,7 +591,6 @@ class App extends React.Component<any, IState> {
       url: data.url,
     })
     this.updateState({
-      ...this.state,
       url: data.url,
     })
   }
@@ -686,7 +675,6 @@ class App extends React.Component<any, IState> {
     const cursor = await this.cdpHelper.getCursorForNode(nodeInfo)
 
     this.setState({
-      ...this.state,
       viewportMetadata: {
         ...this.state.viewportMetadata,
         cursor,
@@ -717,7 +705,6 @@ class App extends React.Component<any, IState> {
 
       if (highlightBoxModel && highlightBoxModel.model) {
         this.setState({
-          ...this.state,
           viewportMetadata: {
             ...this.state.viewportMetadata,
             highlightInfo: highlightBoxModel.model,
