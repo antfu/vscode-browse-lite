@@ -5,11 +5,13 @@ import { Resizable } from 're-resizable'
 import debounce from 'lodash/debounce'
 import Loading from '../loading-bar/loading-bar'
 import Screencast from '../screencast/screencast'
+import { ErrorPage } from '../../error-page/error-page'
 
 class Viewport extends React.Component<any, any> {
   private viewportRef: React.RefObject<HTMLDivElement>
   private debouncedResizeHandler: any
   private viewportPadding: any
+  private onActionInvoked: any
 
   constructor(props: any) {
     super(props)
@@ -27,6 +29,7 @@ class Viewport extends React.Component<any, any> {
     this.handleScreencastInteraction = this.handleScreencastInteraction.bind(this)
     this.handleResizeStop = this.handleResizeStop.bind(this)
     this.handleMouseMoved = this.handleMouseMoved.bind(this)
+    this.onActionInvoked = this.props.onActionInvoked.bind(this)
   }
 
   public componentDidMount() {
@@ -68,48 +71,51 @@ class Viewport extends React.Component<any, any> {
       }
     }
 
-    const renderer = (
-      <Screencast
-        height={height}
-        width={width}
-        frame={this.props.frame}
-        format={this.props.format}
-        viewportMetadata={viewport}
-        isInspectEnabled={this.props.isInspectEnabled}
-        onInspectElement={this.handleInspectElement}
-        onInspectHighlightRequested={this.handleInspectHighlightRequested}
-        onInteraction={this.handleScreencastInteraction}
-        onMouseMoved={this.handleMouseMoved}
-      />
-    )
-
     return (
       <div
         className={`viewport ${this.props.isDeviceEmulationEnabled ? 'viewport-resizable' : ''}`}
         ref={this.viewportRef}
       >
         <Loading percent={viewport.loadingPercent} />
-        <Resizable
-          className="viewport-resizable-wrap"
-          size={{
-            width,
-            height,
-          }}
-          onResizeStop={this.handleResizeStop}
-          enable={resizableEnableOptions}
-          handleClasses={{
-            bottom: 'viewport-resizer resizer-bottom',
-            bottomRight: 'viewport-resizer resizer-bottom-right',
-            bottomLeft: 'viewport-resizer resizer-bottom-left',
-            left: 'viewport-resizer resizer-left',
-            right: 'viewport-resizer resizer-right',
-            top: 'viewport-resizer resizer-top',
-            topRight: 'viewport-resizer resizer-top-right',
-            topLeft: 'viewport-resizer resizer-top-left',
-          }}
-        >
-          {renderer}
-        </Resizable>
+        {
+          this.props.errorText
+            ? <ErrorPage
+              errorText={this.props.errorText}
+              onActionInvoked={this.onActionInvoked}
+            />
+            : (<Resizable
+              className="viewport-resizable-wrap"
+              size={{
+                width,
+                height,
+              }}
+              onResizeStop={this.handleResizeStop}
+              enable={resizableEnableOptions}
+              handleClasses={{
+                bottom: 'viewport-resizer resizer-bottom',
+                bottomRight: 'viewport-resizer resizer-bottom-right',
+                bottomLeft: 'viewport-resizer resizer-bottom-left',
+                left: 'viewport-resizer resizer-left',
+                right: 'viewport-resizer resizer-right',
+                top: 'viewport-resizer resizer-top',
+                topRight: 'viewport-resizer resizer-top-right',
+                topLeft: 'viewport-resizer resizer-top-left',
+              }}
+            >
+              <Screencast
+                height={height}
+                width={width}
+                frame={this.props.frame}
+                format={this.props.format}
+                viewportMetadata={viewport}
+                isInspectEnabled={this.props.isInspectEnabled}
+                onInspectElement={this.handleInspectElement}
+                onInspectHighlightRequested={this.handleInspectHighlightRequested}
+                onInteraction={this.handleScreencastInteraction}
+                onMouseMoved={this.handleMouseMoved}
+              />
+            </Resizable>)
+        }
       </div>
     )
   }

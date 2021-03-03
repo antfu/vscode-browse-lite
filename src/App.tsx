@@ -20,6 +20,7 @@ interface IState {
   frame: object | null
   url: string
   quality: number
+  errorText: string | undefined
   everyNthFrame: number
   isDebug: boolean
   isVerboseMode: boolean
@@ -68,6 +69,7 @@ class App extends React.Component<any, IState> {
       everyNthFrame: 1,
       isVerboseMode: false,
       isDebug: false,
+      errorText: undefined,
       isInspectEnabled: false,
       isDeviceEmulationEnabled: false,
       history: {
@@ -105,6 +107,7 @@ class App extends React.Component<any, IState> {
 
     this.connection.on('Page.frameNavigated', (result: any) => {
       const { frame } = result
+      console.log('frame', frame)
       const isMainFrame = !frame.parentId
 
       if (isMainFrame) {
@@ -115,6 +118,7 @@ class App extends React.Component<any, IState> {
             isLoading: true,
             loadingPercent: 0.1,
           },
+          errorText: frame.unreachableUrl ? 'Failed to reach' : undefined,
         })
       }
     })
@@ -186,11 +190,8 @@ class App extends React.Component<any, IState> {
         this.stopCasting()
         this.startCasting()
 
-        if (payload.startUrl) {
-          this.connection.send('Page.navigate', {
-            url: payload.startUrl,
-          })
-        }
+        if (payload.startUrl)
+          this.handleNavigate(payload.startUrl)
       },
     )
 
@@ -259,6 +260,8 @@ class App extends React.Component<any, IState> {
           frame={this.state.frame}
           format={this.state.format}
           url={this.state.url}
+          onActionInvoked={this.onToolbarActionInvoked}
+          errorText={this.state.errorText}
           onViewportChanged={this.onViewportChanged}
           ref={(c) => {
             this.viewport = c
@@ -387,11 +390,9 @@ class App extends React.Component<any, IState> {
     }
   }
 
-  private async updateState(newState: any) {
-    return new Promise<void>((resolve, reject) => {
-      this.setState(newState, () => {
-        resolve()
-      })
+  private async updateState(newState: Partial<IState>) {
+    return new Promise<void>((resolve) => {
+      this.setState(newState as any, resolve)
     })
   }
 
@@ -514,7 +515,7 @@ class App extends React.Component<any, IState> {
         this.handleToggleDeviceEmulation()
         break
       case 'urlChange':
-        this.handleUrlChange(data)
+        this.handleNavigate(data.url)
         break
       case 'readClipboard':
         return this.connection.send('Clipboard.readText')
@@ -554,13 +555,9 @@ class App extends React.Component<any, IState> {
     }
   }
 
-  private handleUrlChange(data: any) {
-    this.connection.send('Page.navigate', {
-      url: data.url,
-    })
-    this.updateState({
-      url: data.url,
-    })
+  private async handleNavigate(url: string) {
+    const data: any = await this.connection.send('Page.navigate', { url })
+    this.setState({ url, errorText: data.errorText })
   }
 
   private handleViewportSizeChange(data: any) {

@@ -1,0 +1,14 @@
+.error-page .title {
+  font-size: 1.4em;
+}
+
+.error-page .icon {
+  font-size: 5em;
+}
+
+.error-page .message {
+  opacity: 0.8;
+  font-size: 1.2em;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}

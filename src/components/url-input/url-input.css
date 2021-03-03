@@ -62,7 +62,6 @@ input:focus, select:focus, input:active, select:active {
 .hidden {
   display: none;
 }
-
 .separator {
   background-color: #ccc;
   height: 1px;
