@@ -237,12 +237,6 @@ class App extends React.Component<any, IState> {
     this.connection.enableVerboseLogging(isVerboseMode)
   }
 
-  private sendStatetoHost() {
-    this.connection.send('extension.appStateChanged', {
-      state: this.state,
-    })
-  }
-
   public render() {
     return (
       <div className="App">
@@ -282,8 +276,8 @@ class App extends React.Component<any, IState> {
     const params = {
       quality: this.state.quality,
       format: this.state.format,
-      maxWidth: 2000,
-      maxHeight: 2000,
+      maxWidth: 3000,
+      maxHeight: 3000,
       everyNthFrame: this.state.everyNthFrame,
     }
 
@@ -401,7 +395,6 @@ class App extends React.Component<any, IState> {
   private async updateState(newState: any) {
     return new Promise<void>((resolve, reject) => {
       this.setState(newState, () => {
-        this.sendStatetoHost()
         resolve()
       })
     })
@@ -440,26 +433,6 @@ class App extends React.Component<any, IState> {
       this.requestNodeHighlighting()
     }
   }
-
-  // private async handleHighlightNodeClickType() {
-  //   if (!this.state.viewportMetadata.highlightNode) {
-  //     return;
-  //   }
-
-  //   let cursor = 'not-allowed';
-  //   let sourceMetadata = this.state.viewportMetadata.highlightNode.sourceMetadata;
-
-  //   if(sourceMetadata && sourceMetadata.fileName) {
-  //     cursor = 'pointer';
-  //   }
-
-  //   this.setState({
-  //     viewportMetadata: {
-  //       ...this.state.viewportMetadata,
-  //       cursor: cursor
-  //     }
-  //   });
-  // }
 
   private async resolveHighlightNodeSourceMetadata() {
     if (!this.state.viewportMetadata.highlightNode)

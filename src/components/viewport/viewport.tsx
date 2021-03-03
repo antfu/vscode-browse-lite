@@ -8,7 +8,6 @@ import Screencast from '../screencast/screencast'
 
 class Viewport extends React.Component<any, any> {
   private viewportRef: React.RefObject<HTMLDivElement>
-  private viewportMetadata: any
   private debouncedResizeHandler: any
   private viewportPadding: any
 
@@ -40,10 +39,10 @@ class Viewport extends React.Component<any, any> {
   }
 
   public render() {
-    this.viewportMetadata = this.props.viewport
+    const viewport = this.props.viewport
 
-    const width = Math.round(this.viewportMetadata.width * this.viewportMetadata.screenZoom)
-    const height = Math.round(this.viewportMetadata.height * this.viewportMetadata.screenZoom)
+    const width = Math.round(viewport.width * viewport.screenZoom)
+    const height = Math.round(viewport.height * viewport.screenZoom)
 
     let resizableEnableOptions = {
       top: false,
@@ -56,7 +55,7 @@ class Viewport extends React.Component<any, any> {
       topLeft: false,
     }
 
-    if (this.viewportMetadata.isResizable) {
+    if (viewport.isResizable) {
       resizableEnableOptions = {
         top: true,
         topRight: true,
@@ -75,7 +74,7 @@ class Viewport extends React.Component<any, any> {
         width={width}
         frame={this.props.frame}
         format={this.props.format}
-        viewportMetadata={this.viewportMetadata}
+        viewportMetadata={viewport}
         isInspectEnabled={this.props.isInspectEnabled}
         onInspectElement={this.handleInspectElement}
         onInspectHighlightRequested={this.handleInspectHighlightRequested}
@@ -89,7 +88,7 @@ class Viewport extends React.Component<any, any> {
         className={`viewport ${this.props.isDeviceEmulationEnabled ? 'viewport-resizable' : ''}`}
         ref={this.viewportRef}
       >
-        <Loading percent={this.viewportMetadata.loadingPercent} />
+        <Loading percent={viewport.loadingPercent} />
         <Resizable
           className="viewport-resizable-wrap"
           size={{
@@ -124,10 +123,12 @@ class Viewport extends React.Component<any, any> {
   private calculateViewportZoom() {
     let screenZoom = 1
 
-    if (this.viewportMetadata.isFixedZoom)
+    const viewport = this.props.viewport
+
+    if (viewport.isFixedZoom)
       return
 
-    if (this.viewportMetadata.isFixedSize) {
+    if (viewport.isFixedSize) {
       const screenViewportDimensions = {
         height: window.innerHeight - 38, // TODO: Remove hardcoded toolbar height
         width: window.innerWidth,
@@ -142,12 +143,12 @@ class Viewport extends React.Component<any, any> {
       }
 
       screenZoom = Math.min(
-        screenViewportDimensions.width / this.viewportMetadata.width,
-        screenViewportDimensions.height / this.viewportMetadata.height,
+        screenViewportDimensions.width / viewport.width,
+        screenViewportDimensions.height / viewport.height,
       )
     }
 
-    if (screenZoom === this.viewportMetadata.screenZoom)
+    if (screenZoom === viewport.screenZoom)
       return
 
     console.log('viewport.calculateViewportZoom.emitChange')
@@ -158,7 +159,9 @@ class Viewport extends React.Component<any, any> {
   }
 
   private calculateViewportSize() {
-    if (this.viewportMetadata.isFixedSize)
+    const viewport = this.props.viewport
+
+    if (viewport.isFixedSize)
       return
 
     if (this.viewportRef.current) {
@@ -173,16 +176,16 @@ class Viewport extends React.Component<any, any> {
         viewportHeight = viewportHeight - this.viewportPadding.bottom - this.viewportPadding.top
       }
 
-      viewportHeight = this.roundNumber(viewportHeight)
-      viewportWidth = this.roundNumber(viewportWidth)
+      viewportHeight = Math.floor(viewportHeight)
+      viewportWidth = Math.floor(viewportWidth)
 
       if (
-        viewportWidth === this.roundNumber(this.viewportMetadata.width)
-        && viewportHeight === this.roundNumber(this.viewportMetadata.height)
+        viewportWidth === Math.floor(viewport.width)
+        && viewportHeight === Math.floor(viewport.height)
       )
         return
 
-      console.log('viewport.calculateViewportSize.emitChange')
+      // console.log('viewport.calculateViewportSize.emitChange')
 
       this.emitViewportChanges({
         width: viewportWidth,
@@ -197,9 +200,11 @@ class Viewport extends React.Component<any, any> {
   }
 
   private handleResizeStop(e: any, direction: any, ref: any, delta: any) {
+    const viewport = this.props.viewport
+
     this.emitViewportChanges({
-      width: this.viewportMetadata.width + delta.width,
-      height: this.viewportMetadata.height + delta.height,
+      width: viewport.width + delta.width,
+      height: viewport.height + delta.height,
       isFixedSize: true,
     })
   }
@@ -227,10 +232,6 @@ class Viewport extends React.Component<any, any> {
     this.props.onViewportChanged('hoverElementChanged', {
       params,
     })
-  }
-
-  private roundNumber(value: number) {
-    return Math.floor(value)
   }
 
   private emitViewportChanges(newViewport: any) {
