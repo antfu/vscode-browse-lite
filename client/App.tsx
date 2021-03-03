@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 
 import { resolve as getElementSourceMetadata } from 'element-to-source'
-import { ExtensionConfiguration } from '../ext/ExtensionConfiguration'
+import { ExtensionConfiguration } from '../src/ExtensionConfiguration'
 import Toolbar from './components/toolbar/toolbar'
 import Viewport from './components/viewport/viewport'
 import Connection from './connection'
@@ -56,8 +56,9 @@ interface IViewport {
 
 class App extends React.Component<any, IState> {
   private connection: Connection
-  private viewport: any
+  private viewport: Viewport = undefined!
   private cdpHelper: CDPHelper
+  private nextViewportSize: { width: number; height: number } | undefined
 
   constructor(props: any) {
     super(props)
@@ -107,7 +108,6 @@ class App extends React.Component<any, IState> {
 
     this.connection.on('Page.frameNavigated', (result: any) => {
       const { frame } = result
-      console.log('frame', frame)
       const isMainFrame = !frame.parentId
 
       if (isMainFrame) {
@@ -118,7 +118,9 @@ class App extends React.Component<any, IState> {
             isLoading: true,
             loadingPercent: 0.1,
           },
-          errorText: frame.unreachableUrl ? 'Failed to reach' : undefined,
+          errorText: frame.unreachableUrl
+            ? `Failed to reach ${frame.unreachableUrl}`
+            : undefined,
         })
       }
     })
@@ -213,23 +215,26 @@ class App extends React.Component<any, IState> {
     this.cdpHelper = new CDPHelper(this.connection)
   }
 
-  private handleScreencastFrame(result: any) {
+  private async handleScreencastFrame(result: any) {
     const { sessionId, data, metadata } = result
     this.connection.send('Page.screencastFrameAck', { sessionId })
 
     this.requestNodeHighlighting()
 
-    this.updateState({
+    await this.updateState({
       frame: {
         base64Data: data,
         metadata,
       },
       viewportMetadata: {
         ...this.state.viewportMetadata,
+        ...this.nextViewportSize,
         scrollOffsetX: metadata.scrollOffsetX,
         scrollOffsetY: metadata.scrollOffsetY,
       },
     })
+
+    this.nextViewportSize = undefined
   }
 
   public componentDidUpdate() {
@@ -242,7 +247,7 @@ class App extends React.Component<any, IState> {
     return (
       <div className="App">
         {
-          // hide navbar for devtools
+        // hide navbar for devtools
           this.state.isDebug ? null : <Toolbar
             url={this.state.url}
             viewport={this.state.viewportMetadata}
@@ -263,9 +268,7 @@ class App extends React.Component<any, IState> {
           onActionInvoked={this.onToolbarActionInvoked}
           errorText={this.state.errorText}
           onViewportChanged={this.onViewportChanged}
-          ref={(c) => {
-            this.viewport = c
-          }}
+          ref={c => this.viewport = c!}
         />
       </div>
     )
@@ -343,48 +346,28 @@ class App extends React.Component<any, IState> {
         this.connection.send(data.action, data.params)
         break
 
-      case 'size':
-        console.log('app.onViewportChanged.size', data)
-        const newViewport = {} as any
-        if (data.height !== undefined && data.width !== undefined) {
-          const height = Math.floor(data.height)
-          const width = Math.floor(data.width)
-
-          const devicePixelRatio = window.devicePixelRatio || 1
-
-          this.connection.send('Page.setDeviceMetricsOverride', {
-            deviceScaleFactor: devicePixelRatio,
-            mobile: false,
-            height,
-            width,
-          })
-
-          newViewport.height = height as number
-          newViewport.width = width as number
-        }
-
-        if (data.isResizable !== undefined)
-          newViewport.isResizable = data.isResizable
-
-        if (data.isFixedSize !== undefined)
-          newViewport.isFixedSize = data.isFixedSize
-
-        if (data.isFixedZoom !== undefined)
-          newViewport.isFixedZoom = data.isFixedZoom
-
-        if (data.emulatedDeviceId !== undefined)
-          newViewport.emulatedDeviceId = data.emulatedDeviceId
-
-        if (data.screenZoom !== undefined)
-          newViewport.screenZoom = data.screenZoom
-
+      case 'deviceChange':
         await this.updateState({
           viewportMetadata: {
             ...this.state.viewportMetadata,
-            ...newViewport,
+            ...data,
           },
         })
         this.viewport.calculateViewport()
+        break
+      case 'size':
+        if (data.height !== undefined && data.width !== undefined) {
+          this.connection.send('Page.setDeviceMetricsOverride', {
+            deviceScaleFactor: window.devicePixelRatio || 1,
+            mobile: false,
+            height: Math.floor(data.height),
+            width: Math.floor(data.width),
+          })
+          this.nextViewportSize = {
+            height: data.height,
+            width: data.width,
+          }
+        }
 
         break
     }
@@ -535,7 +518,7 @@ class App extends React.Component<any, IState> {
 
   private handleToggleInspect() {
     if (this.state.isInspectEnabled) {
-      // Hide browser highlight
+    // Hide browser highlight
       this.connection.send('Overlay.hideHighlight')
 
       // Hide local highlight
@@ -571,19 +554,22 @@ class App extends React.Component<any, IState> {
     const isResizable = data.device.name === 'Responsive'
     const isFixedSize = data.device.name !== 'Responsive'
     const isFixedZoom = data.device.name === 'Responsive'
-    const width = data.device.viewport ? data.device.viewport.width : undefined
-    const height = data.device.viewport ? data.device.viewport.height : undefined
     const screenZoom = 1
 
-    this.onViewportChanged('size', {
+    this.onViewportChanged('deviceChange', {
       emulatedDeviceId: data.device.name,
-      height,
       isResizable,
       isFixedSize,
       isFixedZoom,
       screenZoom,
-      width,
     })
+
+    if (data.device.viewport) {
+      this.onViewportChanged('size', {
+        width: data.device.viewport.width,
+        height: data.device.viewport.height,
+      })
+    }
   }
 
   private handleToggleDeviceEmulation() {
@@ -594,7 +580,7 @@ class App extends React.Component<any, IState> {
   }
 
   private disableViewportDeviceEmulation() {
-    console.log('app.disableViewportDeviceEmulation')
+    // console.log('app.disableViewportDeviceEmulation')
     this.handleViewportDeviceChange({
       device: {
         name: 'Responsive',
@@ -610,7 +596,7 @@ class App extends React.Component<any, IState> {
   }
 
   private enableViewportDeviceEmulation(deviceName = 'Responsive') {
-    console.log('app.enableViewportDeviceEmulation')
+    // console.log('app.enableViewportDeviceEmulation')
     this.handleViewportDeviceChange({
       device: {
         name: deviceName,
@@ -626,7 +612,7 @@ class App extends React.Component<any, IState> {
   }
 
   private handleClipboardWrite(data: any) {
-    // overwrite the clipboard only if there is a valid value
+  // overwrite the clipboard only if there is a valid value
     if (data && (data as any).value)
       return this.connection.send('Clipboard.writeText', data)
   }

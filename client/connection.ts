@@ -13,9 +13,7 @@ export default class Connection extends EventEmitter2 {
     this.callbacks = new Map()
     this.logger = new Logger()
 
-    window.addEventListener('message', (event) => {
-      this.onMessage(event)
-    })
+    window.addEventListener('message', event => this.onMessage(event))
   }
 
   send<T>(method: string, params = {}): Promise<T> {

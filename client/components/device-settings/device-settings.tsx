@@ -87,7 +87,7 @@ class DeviceSettings extends React.Component<any, any> {
           />
         </span>
 
-        <select className="device-selector" value="fit" onChange={this.handleZoomChange}>
+        <select className="device-selector" value="fit">
           {zoomLevels.map((level: any) => {
             return (
               <option key={level.value} value={level.value}>
@@ -123,10 +123,6 @@ class DeviceSettings extends React.Component<any, any> {
       width: newVal,
       height: this.props.height,
     })
-  }
-
-  private handleZoomChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    console.log('not implemented')
   }
 }
 

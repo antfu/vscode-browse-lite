@@ -5,7 +5,7 @@ import { Resizable } from 're-resizable'
 import debounce from 'lodash/debounce'
 import Loading from '../loading-bar/loading-bar'
 import Screencast from '../screencast/screencast'
-import { ErrorPage } from '../../error-page/error-page'
+import { ErrorPage } from '../error-page/error-page'
 
 class Viewport extends React.Component<any, any> {
   private viewportRef: React.RefObject<HTMLDivElement>
@@ -159,9 +159,7 @@ class Viewport extends React.Component<any, any> {
 
     // console.log('viewport.calculateViewportZoom.emitChange')
 
-    this.emitViewportChanges({
-      screenZoom,
-    })
+    this.emitViewportChanges({ screenZoom })
   }
 
   private calculateViewportSize() {
@@ -201,7 +199,7 @@ class Viewport extends React.Component<any, any> {
   }
 
   private handleViewportResize() {
-    console.log('viewport.handleViewportResize')
+    // console.log('viewport.handleViewportResize')
     this.calculateViewport()
   }
 
