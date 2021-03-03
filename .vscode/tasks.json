@@ -6,7 +6,7 @@
     {
       "label": "npm: build",
       "type": "shell",
-      "command": "npm run build"
+      "command": "npm run build:dev"
     }
   ]
 }

@@ -1,9 +1,13 @@
-/src
-/client
+/.eslintignore
 /.github
+/.gitignore
 /.vscode
-yarn.lock
+/.yarnrc
+/index.html
+/tsconfig.json
+/vite.config.ts
+/yarn.lock
 
-node_modules/**/*.md
-node_modules/**/LICENSE*
-node_modules/**/Makefile
+/client
+/src
+/node_modules

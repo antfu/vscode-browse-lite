@@ -18,7 +18,8 @@
   "publisher": "antfu",
   "main": "./dist/extension.js",
   "scripts": {
-    "build": "rimraf dist && vite build && npm run build:ts",
+    "build:dev": "vite build && npm run build:ts",
+    "build": "rimraf dist && vite build && npm run build:ts -- --minify --sourcemap",
     "build:ts": "tsup src/extension.ts --external=vscode -d dist",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
@@ -275,16 +276,14 @@
   "resolutions": {
     "@types/react": "16.7.18"
   },
-  "dependencies": {
+  "devDependencies": {
     "@chiragrupani/karma-chromium-edge-launcher": "^2.1.0",
     "element-to-source": "^1.0.1",
     "event-emitter-enhancer": "^2.0.0",
     "eventemitter2": "^6.4.4",
     "find-up": "^5.0.0",
     "karma-chrome-launcher": "^3.1.0",
-    "puppeteer-core": "^8.0.0"
-  },
-  "devDependencies": {
+    "puppeteer-core": "^8.0.0",
     "@antfu/eslint-config": "^0.4.3",
     "@types/jest": "26.0.20",
     "@types/karma-chrome-launcher": "^3.1.0",
