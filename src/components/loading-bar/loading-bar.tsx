@@ -14,7 +14,6 @@ class LoadingBar extends React.Component<any, ILoadingBarState> {
     return (
       <div className="loading-bar">
         <div className="bar" style={this.getBarStyle()}>
-          <div className="peg" />
         </div>
       </div>
     )
