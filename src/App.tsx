@@ -307,12 +307,7 @@ class App extends React.Component<any, IState> {
     const historyIndex = history.currentIndex
     const historyEntries = history.entries
     const currentEntry = historyEntries[historyIndex]
-    let url = currentEntry.url
-
-    const pattern = /^http:\/\/(.+)/
-    const match = url.match(pattern)
-    if (match)
-      url = match[1]
+    const url = currentEntry.url
 
     this.updateState({
       url,

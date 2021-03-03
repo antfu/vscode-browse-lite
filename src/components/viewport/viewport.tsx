@@ -115,7 +115,7 @@ class Viewport extends React.Component<any, any> {
   }
 
   public calculateViewport() {
-    console.log('viewport.calculateViewport')
+    // console.log('viewport.calculateViewport')
     this.calculateViewportSize()
     this.calculateViewportZoom()
   }
@@ -151,7 +151,7 @@ class Viewport extends React.Component<any, any> {
     if (screenZoom === viewport.screenZoom)
       return
 
-    console.log('viewport.calculateViewportZoom.emitChange')
+    // console.log('viewport.calculateViewportZoom.emitChange')
 
     this.emitViewportChanges({
       screenZoom,
