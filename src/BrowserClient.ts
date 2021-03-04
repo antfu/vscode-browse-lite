@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events'
 import { platform } from 'os'
-import * as edge from '@chiragrupani/karma-chromium-edge-launcher'
-import * as chrome from 'karma-chrome-launcher'
+import { existsSync } from 'fs'
+import edge from '@chiragrupani/karma-chromium-edge-launcher'
+import chrome from 'karma-chrome-launcher'
 import puppeteer, { Browser } from 'puppeteer-core'
-import { workspace } from 'vscode'
+import { workspace, window } from 'vscode'
 import { ExtensionConfiguration } from './ExtensionConfiguration'
 import { tryPort } from './Config'
 import { BrowserPage } from './BrowserPage'
@@ -16,20 +17,19 @@ export class BrowserClient extends EventEmitter {
   }
 
   private async launchBrowser() {
-    let chromePath = this.getChromiumPath()
     const chromeArgs = []
-
-    if (this.config.chromeExecutable)
-      chromePath = this.config.chromeExecutable
 
     this.config.debugPort = await tryPort(this.config.debugPort)
 
     chromeArgs.push(`--remote-debugging-port=${this.config.debugPort}`)
 
+    const chromePath = this.config.chromeExecutable || this.getChromiumPath()
+
     if (!chromePath) {
-      throw new Error(
-        `No Chrome installation found, or no Chrome executable set in the settings - used path ${chromePath}`,
+      window.showErrorMessage(
+        'No Chrome installation found, or no Chrome executable set in the settings',
       )
+      return
     }
 
     if (platform() === 'linux')
@@ -67,29 +67,18 @@ export class BrowserClient extends EventEmitter {
   }
 
   public getChromiumPath(): string | undefined {
-    let foundPath: string | undefined
-    const knownChromiums = [...Object.keys(chrome), ...Object.keys(edge)]
+    const knownChromiums = [...Object.entries(chrome), ...Object.entries(edge)]
 
-    knownChromiums.forEach((key) => {
-      if (foundPath)
-        return
+    for (const [key, info] of knownChromiums) {
+      console.log('key', key, info?.[1].prototype)
       if (!key.startsWith('launcher'))
-        return
+        continue
 
-      // @ts-ignore
-      const info: typeof import('karma-chrome-launcher').example = chrome[key] || edge[key]
+      const path = info?.[1]?.prototype?.DEFAULT_CMD?.[process.platform]
+      if (path && typeof path === 'string' && existsSync(path))
+        return path
+    }
 
-      if (!info[1].prototype)
-        return
-      if (!info[1].prototype.DEFAULT_CMD)
-        return
-
-      const possiblePaths = info[1].prototype.DEFAULT_CMD
-      const maybeThisPath = possiblePaths[process.platform]
-      if (maybeThisPath && typeof maybeThisPath === 'string')
-        foundPath = maybeThisPath
-    })
-
-    return foundPath
+    return undefined
   }
 }
