@@ -1,5 +1,5 @@
 import React from 'react'
-// import './screencast.css'
+import './screencast.css'
 
 // This implementation is heavily inspired by https://cs.chromium.org/chromium/src/third_party/blink/renderer/devtools/front_end/screencast/ScreencastView.js
 
@@ -58,18 +58,13 @@ class Screencast extends React.Component<any, any> {
   public render() {
     const canvasStyle = {
       cursor: this.props.viewportMetadata?.cursor || 'auto',
-      outline: 'none',
-      position: 'absolute' as const,
-      top: 0,
-      left: 0,
-      maxHeight: 'unset',
-      maxWidth: 'unset',
     }
     const base64Data = this.props.frame?.base64Data
     const format = this.props.format
 
     return (
       <img
+        className="screencast"
         src={`data:image/${format};base64,${base64Data}`}
         ref={this.imageRef}
         style={canvasStyle}

@@ -1,0 +1,16 @@
+img.screencast {
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0); /* Chrome, Safari, Opera */
+  transform: translateZ(0);
+  image-rendering: -moz-crisp-edges;         /* Firefox */
+  image-rendering:   -o-crisp-edges;         /* Opera */
+  image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
+  image-rendering: crisp-edges;
+  backface-visibility: hidden;
+  outline: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: unset !important;
+  max-width: unset !important;
+}

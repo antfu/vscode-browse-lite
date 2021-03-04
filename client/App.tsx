@@ -169,25 +169,11 @@ class App extends React.Component<any, IState> {
       this.startCasting()
     })
 
-    // this.connection.on('Overlay.nodeHighlightRequested', (result: any) => {
-    //   console.log('nodeHighlightRequested', result)
-
-    //   // this.handleInspectHighlightRequested();
-    // })
-
-    // this.connection.on('Overlay.inspectNodeRequested', (result: any) => {
-    //   console.log('inspectNodeRequested', result)
-
-    //   // this.handleInspectHighlightRequested();
-    // })
-
     this.connection.on(
       'extension.appConfiguration',
       (payload: ExtensionConfiguration) => {
         if (!payload)
           return
-
-        this.updateState(Object.assign(payload, { url: payload.startUrl || this.state.url }))
 
         this.stopCasting()
         this.startCasting()
@@ -285,18 +271,6 @@ class App extends React.Component<any, IState> {
       maxWidth: 3000,
       maxHeight: 3000,
       everyNthFrame: this.state.everyNthFrame,
-    }
-
-    if (this.state.viewportMetadata.width) {
-      params.maxWidth = Math.floor(
-        this.state.viewportMetadata.width * window.devicePixelRatio,
-      )
-    }
-
-    if (this.state.viewportMetadata.height) {
-      params.maxHeight = Math.floor(
-        this.state.viewportMetadata.height * window.devicePixelRatio,
-      )
     }
 
     this.connection.send('Page.startScreencast', params)
