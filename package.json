@@ -258,6 +258,8 @@
   "activationEvents": [
     "onCommand:browse-lite.open",
     "onCommand:browse-lite.openActiveFile",
+    "onOpenExternalUri:http",
+    "onOpenExternalUri:https",
     "onDebugInitialConfigurations",
     "onDebug",
     "onFileSystem:vsls"

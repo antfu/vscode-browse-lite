@@ -1,4 +1,4 @@
-import { commands, ExtensionContext } from 'vscode'
+import { commands, ExtensionContext, Uri } from 'vscode'
 import * as EventEmitter from 'eventemitter2'
 
 import { BrowserClient } from './BrowserClient'
@@ -31,7 +31,7 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     }
   }
 
-  public async create(startUrl?: string) {
+  public async create(startUrl: string | Uri = this.config.startUrl) {
     this.refreshSettings()
 
     if (!this.browser)
@@ -71,7 +71,7 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
 
     this.panels.add(panel)
 
-    await panel.launch(startUrl)
+    await panel.launch(startUrl.toString())
 
     this.emit('windowCreated', panel)
 

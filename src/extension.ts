@@ -7,18 +7,34 @@ export function activate(ctx: ExtensionContext) {
   const manager = new PanelManager(ctx)
   const debugProvider = new DebugProvider(manager)
 
+  // Proposed API
+  // https://code.visualstudio.com/updates/v1_53#_external-uri-opener
+  //
+  // window.registerExternalUriOpener(
+  //   'myExtension.opener',
+  //   {
+  //     canOpenExternalUri(uri: Uri) {
+  //       return ExternalUriOpenerPriority.
+  //     },
+  //     openExternalUri(resolveUri: vscode.Uri) {
+  //       // Actually open the URI.
+  //       // This is called once the user has selected this opener.
+  //     },
+  //   },
+  //   {
+  //     schemes: ['http', 'https'],
+  //     label: localize('openTitle', 'Open URL using My Extension'),
+  //   },
+  // )
+
   ctx.subscriptions.push(
     debug.registerDebugConfigurationProvider(
       'browse-lite',
       debugProvider.getProvider(),
     ),
 
-    commands.registerCommand('browse-lite.open', async(url?) => {
-      // Handle VS Code URIs
-      if (url != null && url instanceof Uri && url.scheme === 'file')
-        url = url.toString()
-
-      return await manager.create(url)
+    commands.registerCommand('browse-lite.open', async(url?: string | Uri) => {
+      await manager.create(url)
     }),
 
     commands.registerCommand('browse-lite.openActiveFile', () => {
