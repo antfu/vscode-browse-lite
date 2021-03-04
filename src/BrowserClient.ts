@@ -70,7 +70,6 @@ export class BrowserClient extends EventEmitter {
     const knownChromiums = [...Object.entries(chrome), ...Object.entries(edge)]
 
     for (const [key, info] of knownChromiums) {
-      console.log('key', key, info?.[1].prototype)
       if (!key.startsWith('launcher'))
         continue
 
