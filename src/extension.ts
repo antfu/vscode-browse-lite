@@ -7,27 +7,8 @@ export function activate(ctx: ExtensionContext) {
   const manager = new PanelManager(ctx)
   const debugProvider = new DebugProvider(manager)
 
-  // Proposed API
-  // https://code.visualstudio.com/updates/v1_53#_external-uri-opener
-  //
-  // window.registerExternalUriOpener(
-  //   'myExtension.opener',
-  //   {
-  //     canOpenExternalUri(uri: Uri) {
-  //       return ExternalUriOpenerPriority.
-  //     },
-  //     openExternalUri(resolveUri: vscode.Uri) {
-  //       // Actually open the URI.
-  //       // This is called once the user has selected this opener.
-  //     },
-  //   },
-  //   {
-  //     schemes: ['http', 'https'],
-  //     label: localize('openTitle', 'Open URL using My Extension'),
-  //   },
-  // )
-
   ctx.subscriptions.push(
+
     debug.registerDebugConfigurationProvider(
       'browse-lite',
       debugProvider.getProvider(),
@@ -61,5 +42,21 @@ export function activate(ctx: ExtensionContext) {
       const panel = await manager.current?.createDebugPanel()
       panel?.show()
     }),
+
+    // https://code.visualstudio.com/updates/v1_53#_external-uri-opener
+    // @ts-expect-error proposed API
+    window.registerExternalUriOpener?.(
+      'browse-lite.opener',
+      {
+        canOpenExternalUri: () => 2,
+        openExternalUri(resolveUri: Uri) {
+          manager.create(resolveUri)
+        },
+      },
+      {
+        schemes: ['http', 'https'],
+        label: 'Open URL using Browse Lite',
+      },
+    ),
   )
 }
