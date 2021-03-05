@@ -43,9 +43,12 @@ export function activate(ctx: ExtensionContext) {
       panel?.show()
     }),
 
+  )
+
+  try {
     // https://code.visualstudio.com/updates/v1_53#_external-uri-opener
     // @ts-expect-error proposed API
-    window.registerExternalUriOpener?.(
+    ctx.subscriptions.push(window.registerExternalUriOpener?.(
       'browse-lite.opener',
       {
         canOpenExternalUri: () => 2,
@@ -57,6 +60,7 @@ export function activate(ctx: ExtensionContext) {
         schemes: ['http', 'https'],
         label: 'Open URL using Browse Lite',
       },
-    ),
-  )
+    ))
+  }
+  catch {}
 }
