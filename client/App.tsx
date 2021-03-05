@@ -66,7 +66,7 @@ class App extends React.Component<any, IState> {
       frame: null,
       format: 'jpeg',
       url: 'about:blank',
-      quality: 80,
+      quality: 100,
       everyNthFrame: 1,
       isVerboseMode: false,
       isDebug: false,
@@ -268,8 +268,6 @@ class App extends React.Component<any, IState> {
     const params = {
       quality: this.state.quality,
       format: this.state.format,
-      maxWidth: 3000,
-      maxHeight: 3000,
       everyNthFrame: this.state.everyNthFrame,
     }
 

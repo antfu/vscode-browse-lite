@@ -98,7 +98,7 @@
           "type": "boolean"
         },
         "browse-lite.quality": {
-          "default": 80,
+          "default": 100,
           "description": "Image quality of screencasting",
           "type": "number"
         },
