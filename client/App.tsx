@@ -64,7 +64,7 @@ class App extends React.Component<any, IState> {
     super(props)
     this.state = {
       frame: null,
-      format: 'jpeg',
+      format: 'png',
       url: 'about:blank',
       quality: 100,
       everyNthFrame: 1,
@@ -104,6 +104,10 @@ class App extends React.Component<any, IState> {
 
     this.connection.on('Page.navigatedWithinDocument', (result: any) => {
       this.requestNavigationHistory()
+    })
+
+    this.connection.on('extension.appConfiguration', (v) => {
+      this.updateState(v)
     })
 
     this.connection.on('Page.frameNavigated', (result: any) => {
