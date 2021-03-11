@@ -187,6 +187,13 @@ class App extends React.Component<any, IState> {
       },
     )
 
+    this.connection.on(
+      'extension.navigateTo', 
+      ({ url }: { url:string })=> {
+        this.handleNavigate(url)
+      }
+    )
+
     this.connection.on('extension.viewport', (viewport: IViewport) => {
       this.handleViewportSizeChange(viewport)
       // this.enableViewportDeviceEmulation('Live Share')

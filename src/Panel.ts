@@ -156,6 +156,15 @@ export class Panel extends EventEmitter2 {
     this.emit('focus')
   }
 
+  public navigateTo(url: string) {
+    this._panel.webview.postMessage({
+      method: 'extension.navigateTo',
+      result: {
+        url,
+      },
+    })
+  }
+
   public async createDebugPanel() {
     if (this.isDebugPage)
       return
