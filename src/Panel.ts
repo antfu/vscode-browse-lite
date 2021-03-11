@@ -163,6 +163,7 @@ export class Panel extends EventEmitter2 {
         url,
       },
     })
+    this.url = url
   }
 
   public async createDebugPanel() {

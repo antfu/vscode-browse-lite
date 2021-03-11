@@ -15,7 +15,7 @@ export function activate(ctx: ExtensionContext) {
     ),
 
     commands.registerCommand('browse-lite.open', async(url?: string | Uri) => {
-      await manager.create(url)
+      return await manager.create(url)
     }),
 
     commands.registerCommand('browse-lite.openActiveFile', () => {
