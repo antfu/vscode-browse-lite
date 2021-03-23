@@ -1,8 +1,8 @@
-import { commands, ExtensionContext, Uri } from 'vscode'
+import { commands, ExtensionContext, Uri, workspace } from 'vscode'
 import * as EventEmitter from 'eventemitter2'
 
 import { BrowserClient } from './BrowserClient'
-import { getConfigs } from './Config'
+import { getConfig, getConfigs } from './Config'
 import { Panel } from './Panel'
 import { ExtensionConfiguration } from './ExtensionConfiguration'
 
@@ -79,6 +79,22 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
       dispose: () => panel.dispose(),
     })
 
+    return panel
+  }
+
+  public async createFile(filepath: string) {
+    if (!filepath)
+      return
+
+    const panel = await this.create(`file://${filepath}`)
+    if (getConfig('browse-lite.localFileAutoReload')) {
+      panel.disposables.push(
+        workspace.createFileSystemWatcher(filepath, true, false, false).onDidChange(() => {
+        // TODO: check filename
+          panel.reload()
+        }),
+      )
+    }
     return panel
   }
 

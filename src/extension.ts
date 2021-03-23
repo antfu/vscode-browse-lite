@@ -19,15 +19,8 @@ export function activate(ctx: ExtensionContext) {
     }),
 
     commands.registerCommand('browse-lite.openActiveFile', () => {
-      const activeEditor = window.activeTextEditor
-      if (!activeEditor)
-        return // no active editor: ignore the command
-
-      // get active url
-      const filename = activeEditor.document.fileName
-
-      if (filename)
-        manager.create(`file://${filename}`)
+      const filename = window.activeTextEditor?.document?.fileName
+      manager.createFile(filename)
     }),
 
     commands.registerCommand('browse-lite.controls.refresh', () => {

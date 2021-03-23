@@ -10,7 +10,7 @@ import { ContentProvider } from './ContentProvider'
 export class Panel extends EventEmitter2 {
   private static readonly viewType = 'browse-lite'
   private _panel: WebviewPanel | null
-  private _disposables: Disposable[] = []
+  public disposables: Disposable[] = []
   public url = ''
   public title = ''
   private state = {}
@@ -66,8 +66,8 @@ export class Panel extends EventEmitter2 {
       },
     )
     this._panel.webview.html = this.contentProvider.getContent()
-    this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
-    this._panel.onDidChangeViewState(() => this.emit(this._panel.active ? 'focus' : 'blur'), null, this._disposables)
+    this._panel.onDidDispose(() => this.dispose(), null, this.disposables)
+    this._panel.onDidChangeViewState(() => this.emit(this._panel.active ? 'focus' : 'blur'), null, this.disposables)
     this._panel.webview.onDidReceiveMessage(
       (msg) => {
         if (msg.type === 'extension.updateTitle') {
@@ -137,7 +137,7 @@ export class Panel extends EventEmitter2 {
         }
       },
       null,
-      this._disposables,
+      this.disposables,
     )
 
     if (startUrl) {
@@ -234,8 +234,8 @@ export class Panel extends EventEmitter2 {
       this.browserPage.dispose()
       this.browserPage = null
     }
-    while (this._disposables.length) {
-      const x = this._disposables.pop()
+    while (this.disposables.length) {
+      const x = this.disposables.pop()
       if (x)
         x.dispose()
     }
