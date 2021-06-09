@@ -17,13 +17,13 @@ jobs:
           node-version: '14'
           registry-url: https://registry.npmjs.org/
       - run: yarn
+      - run: npx conventional-github-releaser -p angular
+        env:
+          CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: yarn build
       - run: npx vsce publish -p ${{secrets.VSCE_TOKEN}}
         env:
           VSCE_TOKEN: ${{secrets.VSCE_TOKEN}}
-      - run: npx conventional-github-releaser -p angular
-        env:
-          CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: npx ovsx publish -p ${{secrets.OVSX_TOKEN}}
         env:
           OVSX_TOKEN: ${{secrets.OVSX_TOKEN}}

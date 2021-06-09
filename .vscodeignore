@@ -8,6 +8,6 @@ tsconfig.json
 vite.config.ts
 yarn.lock
 
-client/
-src/
-node_modules/
+client/*
+src/*
+node_modules/*
