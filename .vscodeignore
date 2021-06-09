@@ -3,11 +3,12 @@
 .gitignore
 .vscode
 .yarnrc
-index.html
+/index.html
 tsconfig.json
 vite.config.ts
 yarn.lock
 
+cleint/
 client/*
 src/*
 node_modules/*
