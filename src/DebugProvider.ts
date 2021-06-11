@@ -1,18 +1,34 @@
-import { window, CancellationToken, commands, debug, DebugConfiguration, DebugConfigurationProvider, DebugSession, ProviderResult, WorkspaceFolder } from 'vscode'
+import { window, CancellationToken, commands, debug, DebugConfiguration, DebugConfigurationProvider, DebugSession, ProviderResult, WorkspaceFolder, DebugAdapterTracker } from 'vscode'
 import { PanelManager } from './PanelManager'
+import { getUnderlyingDebugType } from './UnderlyingDebugAdapter';
 
 export class DebugProvider {
-  constructor(private manager: PanelManager) {
+  private readonly underlyingDebugType = getUnderlyingDebugType()
+
+  constructor(private manager: PanelManager) {    
     debug.onDidTerminateDebugSession((e: DebugSession) => {
       if (e.name === 'Browse Lite: Launch' && e.configuration.urlFilter) {
         // TODO: Improve this with some unique ID per browser window instead of url, to avoid closing multiple instances
         this.manager.disposeByUrl(e.configuration.urlFilter)
       }
-    })
+    });
+
+    debug.registerDebugAdapterTrackerFactory(
+      this.underlyingDebugType,
+      {
+        createDebugAdapterTracker(session: DebugSession): ProviderResult<DebugAdapterTracker> {
+          const config = session.configuration
+          if (!config._browseLite || !config._browseLiteLaunch) {
+            return undefined
+          }
+          return manager.create(config._browseLiteLaunch).then(() => undefined)
+        }
+    });
   }
 
   getProvider(): DebugConfigurationProvider {
     const manager = this.manager
+    const debugType = this.underlyingDebugType
 
     return {
       provideDebugConfigurations(
@@ -39,52 +55,39 @@ export class DebugProvider {
         token?: CancellationToken,
         // @ts-ignore
       ): ProviderResult<DebugConfiguration> {
-        const debugConfig = {
-          name: 'Browse Lite',
-          type: 'chrome',
-          request: 'attach',
-          webRoot: config.webRoot,
-          pathMapping: config.pathMapping,
-          trace: config.trace,
-          sourceMapPathOverrides: config.sourceMapPathOverrides,
-          urlFilter: '',
-          url: '',
-          port: null,
+        if (!config || config.type !== 'browse-lite') {
+          return null
         }
 
-        if (config && config.type === 'browse-lite') {
-          if (config.request && config.request === 'attach') {
-            debugConfig.name = 'Browse Lite: Attach'
-            debugConfig.port = manager.config.debugPort
+        config.type = debugType
+        config._browseLite = true
 
-            if (debugConfig.port === null) {
-              window.showErrorMessage(
-                'No Browse Lite window was found. Open a Browse Lite window or use the "launch" request type.',
-              )
-            }
-            else {
-              debug.startDebugging(folder, debugConfig)
-            }
-          }
-          else if (config.request && config.request === 'launch') {
-            debugConfig.name = 'Browse Lite: Launch'
-            debugConfig.urlFilter = config.url
+        if (config.request === 'launch') {          
+          config.name = 'Browse Lite: Launch'
+          config.port = manager.config.debugPort
+          config.request = 'attach'
+          config.urlFilter = config.url
+          config._browseLiteLaunch = config.url
 
-            // Launch new preview tab, set url filter, then attach
-            const launch = commands.executeCommand(
-              'browse-lite.open',
-              config.url,
+          if (config.port === null) {
+            window.showErrorMessage(
+              'Could not launch Browse Lite window',
             )
-
-            launch.then(() => {
-              setTimeout(() => {
-                debugConfig.port = manager.config.debugPort
-                debug.startDebugging(folder, debugConfig)
-              }, 1000)
-            })
+          } else {
+            return config
           }
-        }
-        else {
+        } else if (config.request === 'attach') {
+          config.name = 'Browse Lite: Attach'
+          config.port = manager.config.debugPort
+
+          if (config.port === null) {
+            window.showErrorMessage(
+              'No Browse Lite window was found. Open a Browse Lite window or use the "launch" request type.',
+            );
+          } else {
+            return config
+          }
+        } else {
           window.showErrorMessage(
             'No supported launch config was found.',
           )
