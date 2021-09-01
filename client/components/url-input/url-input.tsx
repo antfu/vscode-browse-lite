@@ -175,7 +175,7 @@ class UrlInput extends React.Component<any, IUrlInputState> {
   }
 
   private enterUrl() {
-    let url = this.state.url
+    let url = this.state.url.trimLeft()
     const schemeRegex = /^(https?|about|chrome|file):/
 
     if (!url.match(schemeRegex))
