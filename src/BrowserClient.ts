@@ -23,6 +23,8 @@ export class BrowserClient extends EventEmitter {
 
     chromeArgs.push(`--remote-debugging-port=${this.config.debugPort}`)
 
+    chromeArgs.push(`--allow-file-access-from-files`)
+
     const chromePath = this.config.chromeExecutable || this.getChromiumPath()
 
     if (!chromePath) {
