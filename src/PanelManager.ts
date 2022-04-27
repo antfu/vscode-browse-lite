@@ -35,7 +35,7 @@ export class PanelManager extends EventEmitter.EventEmitter2 {
     this.refreshSettings()
 
     if (!this.browser)
-      this.browser = new BrowserClient(this.config)
+      this.browser = new BrowserClient(this.config, this.ctx)
 
     const panel = new Panel(this.config, this.browser)
 

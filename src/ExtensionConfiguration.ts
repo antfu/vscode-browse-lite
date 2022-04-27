@@ -10,4 +10,5 @@ export interface ExtensionConfiguration {
   isDebug?: boolean
   debugHost: string
   debugPort: number
+  storeUserData: boolean
 }
