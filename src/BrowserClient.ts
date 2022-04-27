@@ -25,6 +25,8 @@ export class BrowserClient extends EventEmitter {
 
     chromeArgs.push(`--allow-file-access-from-files`)
 
+    chromeArgs.push(`--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36`)
+
     const chromePath = this.config.chromeExecutable || this.getChromiumPath()
 
     if (!chromePath) {
@@ -43,6 +45,7 @@ export class BrowserClient extends EventEmitter {
       executablePath: chromePath,
       args: chromeArgs,
       ignoreHTTPSErrors,
+      ignoreDefaultArgs: ['--mute-audio'],
     })
 
     // close the initial empty page
