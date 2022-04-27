@@ -4,15 +4,16 @@ import { existsSync } from 'fs'
 import edge from '@chiragrupani/karma-chromium-edge-launcher'
 import chrome from 'karma-chrome-launcher'
 import puppeteer, { Browser } from 'puppeteer-core'
-import { workspace, window } from 'vscode'
+import { workspace, window, ExtensionContext } from 'vscode'
 import { ExtensionConfiguration } from './ExtensionConfiguration'
 import { tryPort } from './Config'
 import { BrowserPage } from './BrowserPage'
+import { join } from 'path'
 
 export class BrowserClient extends EventEmitter {
   private browser: Browser
 
-  constructor(private config: ExtensionConfiguration) {
+  constructor(private config: ExtensionConfiguration, private ctx: ExtensionContext) {
     super()
   }
 
@@ -41,15 +42,22 @@ export class BrowserClient extends EventEmitter {
 
     const extensionSettings = workspace.getConfiguration('browse-lite')
     const ignoreHTTPSErrors = extensionSettings.get<boolean>('ignoreHttpsErrors')
+
+    let userDataDir;
+    if (this.config.storeUserData) {
+      userDataDir = join(this.ctx.globalStorageUri.fsPath, 'UserData');
+    }
+
     this.browser = await puppeteer.launch({
       executablePath: chromePath,
       args: chromeArgs,
       ignoreHTTPSErrors,
       ignoreDefaultArgs: ['--mute-audio'],
+      userDataDir,
     })
 
     // close the initial empty page
-    ;(await this.browser.pages()).map(i => i.close())
+    ; (await this.browser.pages()).map(i => i.close())
   }
 
   public async newPage(): Promise<BrowserPage> {

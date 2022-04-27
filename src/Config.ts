@@ -56,5 +56,6 @@ export function getConfigs(ctx: ExtensionContext): ExtensionConfiguration {
     startUrl: getConfig('browse-lite.startUrl', 'https://github.com/antfu/vscode-browse-lite'),
     debugHost: getConfig('browse-lite.debugHost', 'localhost'),
     debugPort: getConfig('browse-lite.debugPort', 9222),
+    storeUserData: getConfig('browse-lite.storeUserData', true),
   }
 }

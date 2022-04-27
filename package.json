@@ -111,6 +111,11 @@
           "default": true,
           "description": "Automatically reload page on local file changes",
           "type": "boolean"
+        },
+        "browse-lite.storeUserData": {
+          "default": true,
+          "description": "Store cookies, localStorage, etc. on disk, so that you don't lose them when you close session. This will help you not get logged out.",
+          "type": "boolean"
         }
       }
     },
