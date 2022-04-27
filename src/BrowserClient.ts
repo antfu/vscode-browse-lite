@@ -42,9 +42,9 @@ export class BrowserClient extends EventEmitter {
 
     const extensionSettings = workspace.getConfiguration('browse-lite')
     const ignoreHTTPSErrors = extensionSettings.get<boolean>('ignoreHttpsErrors')
-    
+
     let userDataDir;
-    if (this.config.storeUserData){
+    if (this.config.storeUserData) {
       userDataDir = join(this.ctx.globalStorageUri.fsPath, 'UserData');
     }
 
@@ -56,8 +56,8 @@ export class BrowserClient extends EventEmitter {
       userDataDir,
     })
 
-      // close the initial empty page
-      ; (await this.browser.pages()).map(i => i.close())
+    // close the initial empty page
+    ; (await this.browser.pages()).map(i => i.close())
   }
 
   public async newPage(): Promise<BrowserPage> {
