@@ -11,4 +11,6 @@ export interface ExtensionConfiguration {
   debugHost: string
   debugPort: number
   storeUserData: boolean
+  proxy: string
+  otherArgs: string
 }

@@ -57,5 +57,7 @@ export function getConfigs(ctx: ExtensionContext): ExtensionConfiguration {
     debugHost: getConfig('browse-lite.debugHost', 'localhost'),
     debugPort: getConfig('browse-lite.debugPort', 9222),
     storeUserData: getConfig('browse-lite.storeUserData', true),
+    proxy: getConfig('browse-lite.proxy', ''),
+    otherArgs: getConfig('browse-lite.otherArgs', ''),
   }
 }
