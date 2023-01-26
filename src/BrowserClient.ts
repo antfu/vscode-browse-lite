@@ -27,6 +27,14 @@ export class BrowserClient extends EventEmitter {
     chromeArgs.push(`--allow-file-access-from-files`)
 
     chromeArgs.push(`--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36`)
+    
+    if(this.config.proxy && this.config.proxy.length>0){
+      chromeArgs.push(`--proxy-server=${this.config.proxy}`)
+    }
+
+    if(this.config.otherArgs && this.config.otherArgs.length>0){
+      chromeArgs.push(this.config.otherArgs)
+    }
 
     const chromePath = this.config.chromeExecutable || this.getChromiumPath()
 

@@ -116,6 +116,14 @@
           "default": true,
           "description": "Store cookies, localStorage, etc. on disk, so that you don't lose them when you close session. This will help you not get logged out.",
           "type": "boolean"
+        },
+        "browse-lite.proxy": {
+          "description": "Add proxy parameters during initial loading of the browser.",
+          "type": "string"
+        },
+        "browse-lite.otherArgs": {
+          "description": "Add other parameters during initial loading of the browser.",
+          "type": "string"
         }
       }
     },
