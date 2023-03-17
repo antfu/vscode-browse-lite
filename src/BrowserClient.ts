@@ -26,6 +26,8 @@ export class BrowserClient extends EventEmitter {
 
     chromeArgs.push(`--allow-file-access-from-files`)
 
+    chromeArgs.push(`--remote-allow-origins=*`)
+
     chromeArgs.push(`--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36`)
     
     if(this.config.proxy && this.config.proxy.length>0){
