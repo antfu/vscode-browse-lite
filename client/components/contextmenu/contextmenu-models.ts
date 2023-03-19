@@ -30,7 +30,7 @@ export enum ContextMenuItemsType {
   PasteAndGo = 'Paste & Go',
   Delete = 'Delete',
   SelectAll = 'Select All',
-  Seperator = '-'
+  Seperator = '-',
 }
 
 export interface IPosition {

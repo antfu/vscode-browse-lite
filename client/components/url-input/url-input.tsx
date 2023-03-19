@@ -1,6 +1,6 @@
 import React from 'react'
 import ContextMenu from '../contextmenu/contextmenu'
-import { IContextMenuProps } from '../contextmenu/contextmenu-models'
+import type { IContextMenuProps } from '../contextmenu/contextmenu-models'
 import './url-input.css'
 
 interface IUrlInputState {
@@ -139,7 +139,8 @@ class UrlInput extends React.Component<any, IUrlInputState> {
 
   // select all url from child components
   private selectUrl(element?: HTMLInputElement) {
-    if (!element && this.ref) element = this.ref
+    if (!element && this.ref)
+      element = this.ref
 
     if (element) {
       element.select()

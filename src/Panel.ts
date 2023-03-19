@@ -1,10 +1,11 @@
 import * as path from 'path'
-import { Disposable, env, Position, TextDocument, Uri, ViewColumn, window, WebviewPanel, workspace, Selection, commands } from 'vscode'
+import type { Disposable, TextDocument, WebviewPanel } from 'vscode'
+import { Position, Selection, Uri, ViewColumn, commands, env, window, workspace } from 'vscode'
 import { EventEmitter2 } from 'eventemitter2'
 
-import { BrowserClient } from './BrowserClient'
-import { BrowserPage } from './BrowserPage'
-import { ExtensionConfiguration } from './ExtensionConfiguration'
+import type { BrowserClient } from './BrowserClient'
+import type { BrowserPage } from './BrowserPage'
+import type { ExtensionConfiguration } from './ExtensionConfiguration'
 import { ContentProvider } from './ContentProvider'
 
 export class Panel extends EventEmitter2 {

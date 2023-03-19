@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 
 import { resolve as getElementSourceMetadata } from 'element-to-source'
-import { ExtensionConfiguration } from '../src/ExtensionConfiguration'
+import type { ExtensionConfiguration } from '../src/ExtensionConfiguration'
 import Toolbar from './components/toolbar/toolbar'
 import Viewport from './components/viewport/viewport'
 import Connection from './connection'
@@ -188,10 +188,10 @@ class App extends React.Component<any, IState> {
     )
 
     this.connection.on(
-      'extension.navigateTo', 
-      ({ url }: { url:string })=> {
+      'extension.navigateTo',
+      ({ url }: { url: string }) => {
         this.handleNavigate(url)
-      }
+      },
     )
 
     this.connection.on('extension.viewport', (viewport: IViewport) => {
@@ -245,7 +245,9 @@ class App extends React.Component<any, IState> {
       <div className="App">
         {
         // hide navbar for devtools
-          this.state.isDebug ? null : <Toolbar
+          this.state.isDebug
+            ? null
+            : <Toolbar
             url={this.state.url}
             viewport={this.state.viewportMetadata}
             onActionInvoked={this.onToolbarActionInvoked}

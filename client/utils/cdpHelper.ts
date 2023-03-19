@@ -8,7 +8,7 @@ export class CDPHelper {
   public async resolveElementProperties(objectId: any, maxDepth: number) {
     const initialProperties = await this.getProperties(objectId)
 
-    const resolve = async(props: any, passedDepth: number) => {
+    const resolve = async (props: any, passedDepth: number) => {
       const resolveResult = {}
       const internalCurentDepth = passedDepth | 0
 

@@ -12,7 +12,7 @@ export default class Logger {
   public log(...messages: any[]) {
     if (!this.enabled)
       return
-
+    // eslint-disable-next-line no-console
     console.log(...messages)
   }
 }

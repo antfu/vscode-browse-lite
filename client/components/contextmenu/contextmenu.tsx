@@ -1,7 +1,9 @@
 import React from 'react'
-import {
+import type {
   IContextMenu,
   IContextMenuProps,
+} from './contextmenu-models'
+import {
   ContextMenuItemsType,
 } from './contextmenu-models'
 import ContextMenuItem from './contextmenuItem'
@@ -189,7 +191,8 @@ class ContextMenu extends React.Component<IContextMenuProps, IContextMenu> {
 
   public render() {
     const className = ['contextMenu']
-    if (!this.state.isVisible) className.push('hidden')
+    if (!this.state.isVisible)
+      className.push('hidden')
 
     const menuStyle = {
       left: this.state.position.x,
@@ -234,7 +237,8 @@ class ContextMenu extends React.Component<IContextMenuProps, IContextMenu> {
   private async PasteHandler(event: React.MouseEvent<HTMLLIElement>) {
     if (this.props.onActionInvoked) {
       const value: string = await this.props.onActionInvoked('readClipboard')
-      if (value) this.props.setUrl(value)
+      if (value)
+        this.props.setUrl(value)
     }
   }
 

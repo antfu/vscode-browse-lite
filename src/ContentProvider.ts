@@ -1,7 +1,7 @@
 import { join } from 'path'
 import fs from 'fs'
 import { Uri } from 'vscode'
-import { ExtensionConfiguration } from './ExtensionConfiguration'
+import type { ExtensionConfiguration } from './ExtensionConfiguration'
 
 export class ContentProvider {
   constructor(private config: ExtensionConfiguration) { }

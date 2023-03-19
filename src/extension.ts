@@ -1,4 +1,5 @@
-import { commands, debug, ExtensionContext, Uri, window } from 'vscode'
+import type { ExtensionContext, Uri } from 'vscode'
+import { commands, debug, window } from 'vscode'
 
 import { DebugProvider } from './DebugProvider'
 import { PanelManager } from './PanelManager'
@@ -14,7 +15,7 @@ export function activate(ctx: ExtensionContext) {
       debugProvider.getProvider(),
     ),
 
-    commands.registerCommand('browse-lite.open', async(url?: string | Uri) => {
+    commands.registerCommand('browse-lite.open', async (url?: string | Uri) => {
       try {
         return await manager.create(url)
       }
@@ -36,7 +37,7 @@ export function activate(ctx: ExtensionContext) {
       manager.current?.openExternal(true)
     }),
 
-    commands.registerCommand('browse-lite.controls.debug', async() => {
+    commands.registerCommand('browse-lite.controls.debug', async () => {
       const panel = await manager.current?.createDebugPanel()
       panel?.show()
     }),

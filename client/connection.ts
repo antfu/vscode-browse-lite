@@ -23,7 +23,7 @@ export default class Connection extends EventEmitter2 {
 
     if (!this.vscode) {
       try {
-        // @ts-ignore
+        // @ts-expect-error
         this.vscode = acquireVsCodeApi()
       }
       catch {
@@ -40,7 +40,7 @@ export default class Connection extends EventEmitter2 {
     }
 
     return new Promise((resolve, reject) => {
-      this.callbacks.set(id, { resolve, reject, error: new Error(), method })
+      this.callbacks.set(id, { resolve, reject, error: new Error('Unknown'), method })
     })
   }
 

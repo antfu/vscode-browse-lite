@@ -1,14 +1,16 @@
 import { EventEmitter } from 'events'
 import { platform } from 'os'
 import { existsSync } from 'fs'
+import { join } from 'path'
 import edge from '@chiragrupani/karma-chromium-edge-launcher'
 import chrome from 'karma-chrome-launcher'
-import puppeteer, { Browser } from 'puppeteer-core'
-import { workspace, window, ExtensionContext } from 'vscode'
-import { ExtensionConfiguration } from './ExtensionConfiguration'
+import type { Browser } from 'puppeteer-core'
+import puppeteer from 'puppeteer-core'
+import type { ExtensionContext } from 'vscode'
+import { window, workspace } from 'vscode'
+import type { ExtensionConfiguration } from './ExtensionConfiguration'
 import { tryPort } from './Config'
 import { BrowserPage } from './BrowserPage'
-import { join } from 'path'
 
 export class BrowserClient extends EventEmitter {
   private browser: Browser
@@ -24,19 +26,17 @@ export class BrowserClient extends EventEmitter {
 
     chromeArgs.push(`--remote-debugging-port=${this.config.debugPort}`)
 
-    chromeArgs.push(`--allow-file-access-from-files`)
+    chromeArgs.push('--allow-file-access-from-files')
 
-    chromeArgs.push(`--remote-allow-origins=*`)
+    chromeArgs.push('--remote-allow-origins=*')
 
-    chromeArgs.push(`--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36`)
-    
-    if(this.config.proxy && this.config.proxy.length>0){
+    chromeArgs.push('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36')
+
+    if (this.config.proxy && this.config.proxy.length > 0)
       chromeArgs.push(`--proxy-server=${this.config.proxy}`)
-    }
 
-    if(this.config.otherArgs && this.config.otherArgs.length>0){
+    if (this.config.otherArgs && this.config.otherArgs.length > 0)
       chromeArgs.push(this.config.otherArgs)
-    }
 
     const chromePath = this.config.chromeExecutable || this.getChromiumPath()
 
@@ -53,10 +53,9 @@ export class BrowserClient extends EventEmitter {
     const extensionSettings = workspace.getConfiguration('browse-lite')
     const ignoreHTTPSErrors = extensionSettings.get<boolean>('ignoreHttpsErrors')
 
-    let userDataDir;
-    if (this.config.storeUserData) {
-      userDataDir = join(this.ctx.globalStorageUri.fsPath, 'UserData');
-    }
+    let userDataDir
+    if (this.config.storeUserData)
+      userDataDir = join(this.ctx.globalStorageUri.fsPath, 'UserData')
 
     this.browser = await puppeteer.launch({
       executablePath: chromePath,

@@ -1,6 +1,7 @@
 import { createServer } from 'http'
-import { ExtensionContext, workspace } from 'vscode'
-import { ExtensionConfiguration } from './ExtensionConfiguration'
+import type { ExtensionContext } from 'vscode'
+import { workspace } from 'vscode'
+import type { ExtensionConfiguration } from './ExtensionConfiguration'
 
 export function getConfig<T>(key: string, v?: T) {
   return workspace.getConfiguration().get(key, v)

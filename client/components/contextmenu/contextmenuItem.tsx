@@ -1,7 +1,9 @@
 import React from 'react'
-import {
+import type {
   IContextMenuItemProps,
   IContextMenuItemState,
+} from './contextmenu-models'
+import {
   ContextMenuItemsType,
 } from './contextmenu-models'
 
