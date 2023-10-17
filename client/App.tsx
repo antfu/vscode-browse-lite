@@ -247,15 +247,17 @@ class App extends React.Component<any, IState> {
         // hide navbar for devtools
           this.state.isDebug
             ? null
-            : <Toolbar
-            url={this.state.url}
-            viewport={this.state.viewportMetadata}
-            onActionInvoked={this.onToolbarActionInvoked}
-            canGoBack={this.state.history.canGoBack}
-            canGoForward={this.state.history.canGoForward}
-            isInspectEnabled={this.state.isInspectEnabled}
-            isDeviceEmulationEnabled={this.state.isDeviceEmulationEnabled}
-          />
+            : (
+              <Toolbar
+                url={this.state.url}
+                viewport={this.state.viewportMetadata}
+                onActionInvoked={this.onToolbarActionInvoked}
+                canGoBack={this.state.history.canGoBack}
+                canGoForward={this.state.history.canGoForward}
+                isInspectEnabled={this.state.isInspectEnabled}
+                isDeviceEmulationEnabled={this.state.isDeviceEmulationEnabled}
+              />
+              )
         }
         <Viewport
           viewport={this.state.viewportMetadata}

@@ -18,13 +18,19 @@ export function CarbonArrowRight(props: React.SVGProps<SVGSVGElement>) {
 
 export function CarbonRenew(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}><path d="M12 10H6.78A11 11 0 0 1 27 16h2A13 13 0 0 0 6 7.68V4H4v8h8z" fill="currentColor"></path><path d="M20 22h5.22A11 11 0 0 1 5 16H3a13 13 0 0 0 23 8.32V28h2v-8h-8z" fill="currentColor"></path></svg>
+    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+      <path d="M12 10H6.78A11 11 0 0 1 27 16h2A13 13 0 0 0 6 7.68V4H4v8h8z" fill="currentColor"></path>
+      <path d="M20 22h5.22A11 11 0 0 1 5 16H3a13 13 0 0 0 23 8.32V28h2v-8h-8z" fill="currentColor"></path>
+    </svg>
   )
 }
 
 export function CarbonDevices(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}><path d="M10 30H4a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2zM4 16v12h6V16z" fill="currentColor"></path><path d="M28 4H6a2 2 0 0 0-2 2v6h2V6h22v14H14v2h2v4h-2v2h9v-2h-5v-4h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" fill="currentColor"></path></svg>
+    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+      <path d="M10 30H4a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2zM4 16v12h6V16z" fill="currentColor"></path>
+      <path d="M28 4H6a2 2 0 0 0-2 2v6h2V6h22v14H14v2h2v4h-2v2h9v-2h-5v-4h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" fill="currentColor"></path>
+    </svg>
   )
 }
 
@@ -72,19 +78,20 @@ class Toolbar extends React.Component<IToolbarProps, any> {
             onClick={this.handleBack}
             disabled={this.props.canGoBack}
           >
-            <CarbonArrowLeft/>
+            <CarbonArrowLeft />
           </button>
           <button
             className="forward"
             onClick={this.handleForward}
             disabled={this.props.canGoForward}
           >
-            <CarbonArrowRight/>
+            <CarbonArrowRight />
           </button>
           <button
             className="refresh"
-            onClick={this.handleRefresh}>
-            <CarbonRenew/>
+            onClick={this.handleRefresh}
+          >
+            <CarbonRenew />
           </button>
           <UrlInput
             url={this.props.url}
@@ -96,7 +103,7 @@ class Toolbar extends React.Component<IToolbarProps, any> {
             title="Emulate device"
             onClick={this.handleEmulateDevice}
           >
-            <CarbonDevices/>
+            <CarbonDevices />
           </button>
         </div>
         <DeviceSettings

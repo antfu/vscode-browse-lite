@@ -9,22 +9,24 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '20'
           registry-url: https://registry.npmjs.org/
       - run: npm i -g @antfu/ni
       - run: nci
-      - run: npx conventional-github-releaser -p angular
+      - run: npx changelogithub
         env:
-          CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: nr build
-      - run: npx vsce publish -p ${{secrets.VSCE_TOKEN}}
+      - run: npx vsce publish -p ${{secrets.VSCE_TOKEN}} --no-dependencies
         env:
           VSCE_TOKEN: ${{secrets.VSCE_TOKEN}}
-      - run: npx ovsx publish -p ${{secrets.OVSX_TOKEN}}
+      - run: npx ovsx publish -p ${{secrets.OVSX_TOKEN}} --no-dependencies
         env:
           OVSX_TOKEN: ${{secrets.OVSX_TOKEN}}

@@ -1,5 +1,5 @@
 import type { CancellationToken, DebugAdapterTracker, DebugConfiguration, DebugConfigurationProvider, DebugSession, ProviderResult, WorkspaceFolder } from 'vscode'
-import { commands, debug, window } from 'vscode'
+import { debug, window } from 'vscode'
 import type { PanelManager } from './PanelManager'
 import { getUnderlyingDebugType } from './UnderlyingDebugAdapter'
 
@@ -24,7 +24,8 @@ export class DebugProvider {
 
           return manager.create(config._browseLiteLaunch).then(() => undefined)
         },
-      })
+      },
+    )
   }
 
   getProvider(): DebugConfigurationProvider {

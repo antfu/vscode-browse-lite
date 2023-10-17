@@ -79,42 +79,46 @@ class Viewport extends React.Component<any, any> {
         <Loading percent={viewport.loadingPercent} />
         {
           this.props.errorText
-            ? <ErrorPage
-              errorText={this.props.errorText}
-              onActionInvoked={this.onActionInvoked}
-            />
-            : (<Resizable
-              className="viewport-resizable-wrap"
-              size={{
-                width,
-                height,
-              }}
-              onResizeStop={this.handleResizeStop}
-              enable={resizableEnableOptions}
-              handleClasses={{
-                bottom: 'viewport-resizer resizer-bottom',
-                bottomRight: 'viewport-resizer resizer-bottom-right',
-                bottomLeft: 'viewport-resizer resizer-bottom-left',
-                left: 'viewport-resizer resizer-left',
-                right: 'viewport-resizer resizer-right',
-                top: 'viewport-resizer resizer-top',
-                topRight: 'viewport-resizer resizer-top-right',
-                topLeft: 'viewport-resizer resizer-top-left',
-              }}
-            >
-              <Screencast
-                height={height}
-                width={width}
-                frame={this.props.frame}
-                format={this.props.format}
-                viewportMetadata={viewport}
-                isInspectEnabled={this.props.isInspectEnabled}
-                onInspectElement={this.handleInspectElement}
-                onInspectHighlightRequested={this.handleInspectHighlightRequested}
-                onInteraction={this.handleScreencastInteraction}
-                onMouseMoved={this.handleMouseMoved}
+            ? (
+              <ErrorPage
+                errorText={this.props.errorText}
+                onActionInvoked={this.onActionInvoked}
               />
-            </Resizable>)
+              )
+            : (
+              <Resizable
+                className="viewport-resizable-wrap"
+                size={{
+                  width,
+                  height,
+                }}
+                onResizeStop={this.handleResizeStop}
+                enable={resizableEnableOptions}
+                handleClasses={{
+                  bottom: 'viewport-resizer resizer-bottom',
+                  bottomRight: 'viewport-resizer resizer-bottom-right',
+                  bottomLeft: 'viewport-resizer resizer-bottom-left',
+                  left: 'viewport-resizer resizer-left',
+                  right: 'viewport-resizer resizer-right',
+                  top: 'viewport-resizer resizer-top',
+                  topRight: 'viewport-resizer resizer-top-right',
+                  topLeft: 'viewport-resizer resizer-top-left',
+                }}
+              >
+                <Screencast
+                  height={height}
+                  width={width}
+                  frame={this.props.frame}
+                  format={this.props.format}
+                  viewportMetadata={viewport}
+                  isInspectEnabled={this.props.isInspectEnabled}
+                  onInspectElement={this.handleInspectElement}
+                  onInspectHighlightRequested={this.handleInspectHighlightRequested}
+                  onInteraction={this.handleScreencastInteraction}
+                  onMouseMoved={this.handleMouseMoved}
+                />
+              </Resizable>
+              )
         }
       </div>
     )

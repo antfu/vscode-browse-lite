@@ -1,4 +1,5 @@
 import React from 'react'
+
 // @ts-expect-error
 import devices from 'browser-viewport-device-descriptions'
 import './device-settings.css'
@@ -108,7 +109,7 @@ class DeviceSettings extends React.Component<any, any> {
   }
 
   private handleHeightChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const newVal = parseInt(e.target.value)
+    const newVal = Number.parseInt(e.target.value)
 
     this.props.onViewportSizeChange({
       height: newVal,
@@ -117,7 +118,7 @@ class DeviceSettings extends React.Component<any, any> {
   }
 
   private handleWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const newVal = parseInt(e.target.value)
+    const newVal = Number.parseInt(e.target.value)
 
     this.props.onViewportSizeChange({
       width: newVal,
