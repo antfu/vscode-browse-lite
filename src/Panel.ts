@@ -66,7 +66,7 @@ export class Panel extends EventEmitter2 {
         ],
       },
     )
-    this._panel.webview.html = this.contentProvider.getContent()
+    this._panel.webview.html = this.contentProvider.getContent(this._panel.webview)
     this._panel.onDidDispose(() => this.dispose(), null, this.disposables)
     this._panel.onDidChangeViewState(() => this.emit(this._panel.active ? 'focus' : 'blur'), null, this.disposables)
     this._panel.webview.onDidReceiveMessage(
