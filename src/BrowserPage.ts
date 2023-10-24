@@ -81,10 +81,12 @@ export class BrowserPage extends EnhancedEventEmitter {
       localStorage.setItem('screencastEnabled', 'false')
       localStorage.setItem('panel-selectedTab', 'console')
       // listen copy event
-      document.addEventListener('copy', () => {
+      const copyHandler = () => {
         const text = document?.getSelection()?.toString() ?? ''
         window[InjectEvent.EMIT_BROWSER_LITE_COPY]?.(text)
-      })
+      }
+      document.addEventListener('copy', copyHandler)
+      document.addEventListener('cut', copyHandler)
       function legacyCopy(value) {
         const ta = document.createElement('textarea')
         ta.value = value ?? ''
@@ -96,9 +98,14 @@ export class BrowserPage extends EnhancedEventEmitter {
         ta.remove()
       }
       // listen paste event
-      document.addEventListener('paste', async () => {
+      document.addEventListener('paste', async (event) => {
         const text = await window[InjectEvent.EMIT_BROWSER_LITE_PASTE]()
-        legacyCopy(text)
+        const originText = document?.getSelection()?.toString() ?? ''
+        if (originText === text)
+          return
+        // FIXME Cannot paste manually. need second paste action.
+        legacyCopy(text);
+        (event.target as HTMLInputElement)?.focus()
       })
     })
 
