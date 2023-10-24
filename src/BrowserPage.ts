@@ -69,11 +69,39 @@ export class BrowserPage extends EnhancedEventEmitter {
   }
 
   public async launch(): Promise<void> {
+    enum InjectEvent {
+      EMIT_BROWSER_LITE_COPY = 'EMIT_BROWSER_LITE_COPY',
+      EMIT_BROWSER_LITE_PASTE = 'EMIT_BROWSER_LITE_PASTE',
+    }
+
+    await this.page.exposeFunction(InjectEvent.EMIT_BROWSER_LITE_COPY, (text: string) => this.clipboard.writeText(text))
+    await this.page.exposeFunction(InjectEvent.EMIT_BROWSER_LITE_PASTE, () => this.clipboard.readText())
     // custom embedded devtools
     this.page.evaluateOnNewDocument(() => {
       localStorage.setItem('screencastEnabled', 'false')
       localStorage.setItem('panel-selectedTab', 'console')
+      // listen copy event
+      document.addEventListener('copy', () => {
+        const text = document?.getSelection()?.toString() ?? ''
+        window[InjectEvent.EMIT_BROWSER_LITE_COPY]?.(text)
+      })
+      function legacyCopy(value) {
+        const ta = document.createElement('textarea')
+        ta.value = value ?? ''
+        ta.style.position = 'absolute'
+        ta.style.opacity = '0'
+        document.body.appendChild(ta)
+        ta.select()
+        document.execCommand('copy')
+        ta.remove()
+      }
+      // listen paste event
+      document.addEventListener('paste', async () => {
+        const text = await window[InjectEvent.EMIT_BROWSER_LITE_PASTE]()
+        legacyCopy(text)
+      })
     })
+
     this.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: isDarkTheme() ? 'dark' : 'light' }])
 
     this.client = await this.page.target().createCDPSession()
