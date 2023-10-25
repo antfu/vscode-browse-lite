@@ -70,43 +70,33 @@ export class BrowserPage extends EnhancedEventEmitter {
 
   public async launch(): Promise<void> {
     enum InjectEvent {
-      EMIT_BROWSER_LITE_COPY = 'EMIT_BROWSER_LITE_COPY',
-      EMIT_BROWSER_LITE_PASTE = 'EMIT_BROWSER_LITE_PASTE',
+      HookCopy = 'EMIT_BROWSER_LITE_COPY',
+      HookPaste = 'EMIT_BROWSER_LITE_PASTE',
+      EnableHookCopyPaste = 'ENABLE_HOOK_COPY_PASTE',
     }
 
-    await this.page.exposeFunction(InjectEvent.EMIT_BROWSER_LITE_COPY, (text: string) => this.clipboard.writeText(text))
-    await this.page.exposeFunction(InjectEvent.EMIT_BROWSER_LITE_PASTE, () => this.clipboard.readText())
-    // custom embedded devtools
+    await Promise.all([
+      // TODO setting for enable sync copy and paste
+      this.page.exposeFunction(InjectEvent.EnableHookCopyPaste, () => true),
+      this.page.exposeFunction(InjectEvent.HookCopy, (text: string) => this.clipboard.writeText(text)),
+      this.page.exposeFunction(InjectEvent.HookPaste, () => this.clipboard.readText()),
+    ])
     this.page.evaluateOnNewDocument(() => {
+      // custom embedded devtools
       localStorage.setItem('screencastEnabled', 'false')
       localStorage.setItem('panel-selectedTab', 'console')
-      // listen copy event
-      const copyHandler = () => {
-        const text = document?.getSelection()?.toString() ?? ''
-        window[InjectEvent.EMIT_BROWSER_LITE_COPY]?.(text)
+
+      // sync copy and paste
+      if (window[InjectEvent.EnableHookCopyPaste]?.()) {
+        const copyHandler = () => { window[InjectEvent.HookCopy]?.(document?.getSelection()?.toString() ?? '') }
+        document.addEventListener('copy', copyHandler)
+        document.addEventListener('cut', copyHandler)
+        document.addEventListener('paste', async (event) => {
+          event.preventDefault()
+          const text = await window[InjectEvent.HookPaste]?.()
+          text && document.execCommand('insertText', false, text)
+        })
       }
-      document.addEventListener('copy', copyHandler)
-      document.addEventListener('cut', copyHandler)
-      function legacyCopy(value) {
-        const ta = document.createElement('textarea')
-        ta.value = value ?? ''
-        ta.style.position = 'absolute'
-        ta.style.opacity = '0'
-        document.body.appendChild(ta)
-        ta.select()
-        document.execCommand('copy')
-        ta.remove()
-      }
-      // listen paste event
-      document.addEventListener('paste', async (event) => {
-        const text = await window[InjectEvent.EMIT_BROWSER_LITE_PASTE]()
-        const originText = document?.getSelection()?.toString() ?? ''
-        if (originText === text)
-          return
-        // FIXME Cannot paste manually. need second paste action.
-        legacyCopy(text);
-        (event.target as HTMLInputElement)?.focus()
-      })
     })
 
     this.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: isDarkTheme() ? 'dark' : 'light' }])

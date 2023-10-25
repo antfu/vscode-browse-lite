@@ -84,6 +84,7 @@ class Screencast extends React.Component<any, any> {
   }
 
   private handleMouseEvent(event: React.MouseEvent<HTMLImageElement>) {
+    event.stopPropagation()
     if (this.props.isInspectEnabled) {
       if (event.type === 'click') {
         const position = this.convertIntoScreenSpace(event, this.state)
