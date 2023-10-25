@@ -88,7 +88,10 @@ export class BrowserPage extends EnhancedEventEmitter {
 
       // sync copy and paste
       if (window[InjectEvent.EnableHookCopyPaste]?.()) {
-        const copyHandler = () => { window[InjectEvent.HookCopy]?.(document?.getSelection()?.toString() ?? '') }
+        const copyHandler = () => {
+          const text = document.getSelection()?.toString()
+          text && window[InjectEvent.HookCopy]?.(text)
+        }
         document.addEventListener('copy', copyHandler)
         document.addEventListener('cut', copyHandler)
         document.addEventListener('paste', async (event) => {
