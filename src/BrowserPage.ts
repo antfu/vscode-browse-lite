@@ -94,8 +94,8 @@ export class BrowserPage extends EnhancedEventEmitter {
 
       // sync copy and paste
       if (window[ExposedFunc.EnableCopyPaste]?.()) {
-        const copyHandler = () => {
-          const text = document.getSelection()?.toString()
+        const copyHandler = (event: ClipboardEvent) => {
+          const text = event.clipboardData?.getData('text/plain') || document.getSelection()?.toString()
           text && window[ExposedFunc.EmitCopy]?.(text)
         }
         document.addEventListener('copy', copyHandler)
