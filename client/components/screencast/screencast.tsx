@@ -85,7 +85,7 @@ class Screencast extends React.Component<any, any> {
   }
 
   private handleContextMenu(event: React.MouseEvent<HTMLImageElement>) {
-    event.stopPropagation()
+    event.preventDefault()
   }
 
   private handleMouseEvent(event: any) {
