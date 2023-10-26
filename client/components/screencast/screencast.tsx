@@ -146,7 +146,24 @@ class Screencast extends React.Component<any, any> {
     return (event.altKey ? 1 : 0) | (event.ctrlKey ? 2 : 0) | (event.metaKey ? 4 : 0) | (event.shiftKey ? 8 : 0)
   }
 
+  private readonly isMac: boolean = /macintosh|mac os x/i.test(navigator.userAgent)
+
+  private readonly clipboardMap = {
+    KeyC: 'document.dispatchEvent(new ClipboardEvent("copy"))',
+    KeyX: 'document.execCommand("cut")', // 'document.dispatchEvent(new ClipboardEvent("cut"))',
+    KeyV: 'document.dispatchEvent(new ClipboardEvent("paste"))',
+  }
+
+  private readonly clipboardCodes = ['KeyC', 'KeyV', 'KeyX'] as const
+
   private emitKeyEvent(event: any) {
+    // HACK Simulate macos keyboard event.
+    if (this.isMac && event.metaKey && this.clipboardCodes.includes(event.code)) {
+      const code = event.code as typeof this.clipboardCodes[number]
+      this.props.onInteraction('Runtime.evaluate', { expression: this.clipboardMap[code] })
+      return
+    }
+
     let type
     switch (event.type) {
       case 'keydown':
