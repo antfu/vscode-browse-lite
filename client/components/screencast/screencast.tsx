@@ -78,9 +78,14 @@ class Screencast extends React.Component<any, any> {
         onKeyDown={this.handleKeyEvent}
         onKeyUp={this.handleKeyEvent}
         onKeyPress={this.handleKeyEvent}
+        onContextMenu={this.handleContextMenu}
         tabIndex={0}
       />
     )
+  }
+
+  private handleContextMenu(event: React.MouseEvent<HTMLImageElement>) {
+    event.preventDefault()
   }
 
   private handleMouseEvent(event: React.MouseEvent<HTMLImageElement>) {
