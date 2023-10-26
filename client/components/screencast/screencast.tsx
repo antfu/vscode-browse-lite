@@ -148,19 +148,16 @@ class Screencast extends React.Component<any, any> {
 
   private readonly isMac: boolean = /macintosh|mac os x/i.test(navigator.userAgent)
 
-  private readonly clipboardMap = {
-    KeyC: 'document.dispatchEvent(new ClipboardEvent("copy"))',
-    KeyX: 'document.execCommand("cut")', // 'document.dispatchEvent(new ClipboardEvent("cut"))',
-    KeyV: 'document.dispatchEvent(new ClipboardEvent("paste"))',
-  }
-
-  private readonly clipboardCodes = ['KeyC', 'KeyV', 'KeyX'] as const
+  private readonly clipboardMockMap = new Map([
+    ['KeyC', 'document.dispatchEvent(new ClipboardEvent("copy"))'],
+    ['KeyX', 'document.execCommand("cut")'], // 'document.dispatchEvent(new ClipboardEvent("cut"))',
+    ['KeyV', 'document.dispatchEvent(new ClipboardEvent("paste"))'],
+  ])
 
   private emitKeyEvent(event: any) {
     // HACK Simulate macos keyboard event.
-    if (this.isMac && event.metaKey && this.clipboardCodes.includes(event.code)) {
-      const code = event.code as typeof this.clipboardCodes[number]
-      this.props.onInteraction('Runtime.evaluate', { expression: this.clipboardMap[code] })
+    if (this.isMac && event.metaKey && this.clipboardMockMap.has(event.code)) {
+      this.props.onInteraction('Runtime.evaluate', { expression: this.clipboardMockMap.get(event.code) })
       return
     }
 
