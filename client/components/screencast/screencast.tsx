@@ -88,7 +88,8 @@ class Screencast extends React.Component<any, any> {
     event.preventDefault()
   }
 
-  private handleMouseEvent(event: any) {
+  private handleMouseEvent(event: React.MouseEvent<HTMLImageElement>) {
+    event.stopPropagation()
     if (this.props.isInspectEnabled) {
       if (event.type === 'click') {
         const position = this.convertIntoScreenSpace(event, this.state)
@@ -134,7 +135,9 @@ class Screencast extends React.Component<any, any> {
     }
   }
 
-  private handleKeyEvent(event: any) {
+  private handleKeyEvent(event: React.KeyboardEvent<HTMLImageElement>) {
+    // Prevents events from penetrating into toolbar input
+    event.stopPropagation()
     this.emitKeyEvent(event.nativeEvent)
 
     if (event.key === 'Tab')
@@ -148,7 +151,21 @@ class Screencast extends React.Component<any, any> {
     return (event.altKey ? 1 : 0) | (event.ctrlKey ? 2 : 0) | (event.metaKey ? 4 : 0) | (event.shiftKey ? 8 : 0)
   }
 
+  private readonly isMac: boolean = /macintosh|mac os x/i.test(navigator.userAgent)
+
+  private readonly clipboardMockMap = new Map([
+    ['KeyC', 'document.dispatchEvent(new ClipboardEvent("copy"))'],
+    ['KeyX', 'document.execCommand("cut")'], // 'document.dispatchEvent(new ClipboardEvent("cut"))',
+    ['KeyV', 'document.dispatchEvent(new ClipboardEvent("paste"))'],
+  ])
+
   private emitKeyEvent(event: any) {
+    // HACK Simulate macos keyboard event.
+    if (this.isMac && event.metaKey && this.clipboardMockMap.has(event.code)) {
+      this.props.onInteraction('Runtime.evaluate', { expression: this.clipboardMockMap.get(event.code) })
+      return
+    }
+
     let type
     switch (event.type) {
       case 'keydown':
