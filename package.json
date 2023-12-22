@@ -319,6 +319,7 @@
   },
   "preview": true,
   "extensionKind": [
-    "ui"
+    "ui",
+    "workspace"
   ]
 }
