@@ -1,4 +1,5 @@
 import * as path from 'path'
+import * as vscode from 'vscode'
 import type { Disposable, TextDocument, WebviewPanel } from 'vscode'
 import { Position, Selection, Uri, ViewColumn, commands, env, window, workspace } from 'vscode'
 import { EventEmitter2 } from 'eventemitter2'
@@ -74,6 +75,8 @@ export class Panel extends EventEmitter2 {
         if (msg.type === 'extension.updateTitle') {
           this.title = msg.params.title
           if (this._panel) {
+            const extDir = vscode.extensions.getExtension ('antfu.browse-lite').extensionPath
+            this._panel.iconPath = vscode.Uri.file(path.join(extDir, 'icons', 'globe.png'))
             this._panel.title = this.isDebugPage ? `DevTools - ${this.parentPanel.title}` : msg.params.title
             return
           }
