@@ -75,6 +75,10 @@ export class Panel extends EventEmitter2 {
           this.title = msg.params.title
           if (this._panel) {
             this._panel.title = this.isDebugPage ? `DevTools - ${this.parentPanel.title}` : msg.params.title
+            try {
+              this._panel.iconPath = Uri.parse(`https://favicon.yandex.net/favicon/${new URL(this.browserPage?.page.url() || '').hostname}`)
+            }
+            catch (err) {}
             return
           }
         }
