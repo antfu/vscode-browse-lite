@@ -2,7 +2,7 @@
   "publisher": "antfu",
   "name": "browse-lite",
   "displayName": "Browse Lite",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "packageManager": "pnpm@8.9.2",
   "description": "Embedded browser in VS Code.",
   "author": {
