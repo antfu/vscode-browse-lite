@@ -244,7 +244,7 @@ class App extends React.Component<any, IState> {
     return (
       <div className="App">
         {
-        // hide navbar for devtools
+          // hide navbar for devtools
           this.state.isDebug
             ? null
             : (
@@ -505,7 +505,7 @@ class App extends React.Component<any, IState> {
 
   private handleToggleInspect() {
     if (this.state.isInspectEnabled) {
-    // Hide browser highlight
+      // Hide browser highlight
       this.connection.send('Overlay.hideHighlight')
 
       // Hide local highlight
@@ -526,8 +526,13 @@ class App extends React.Component<any, IState> {
   }
 
   private async handleNavigate(url: string) {
+    await this.handleSetUserAgent()
     const data: any = await this.connection.send('Page.navigate', { url })
     this.setState({ url, errorText: data.errorText })
+  }
+
+  private async handleSetUserAgent(userAgent: string = navigator.userAgent) {
+    return this.connection.send('Network.setUserAgentOverride', { userAgent })
   }
 
   private handleViewportSizeChange(data: any) {
@@ -557,6 +562,8 @@ class App extends React.Component<any, IState> {
         height: data.device.viewport.height,
       })
     }
+
+    this.handleSetUserAgent(data.device.userAgent)
   }
 
   private handleToggleDeviceEmulation() {
@@ -599,7 +606,7 @@ class App extends React.Component<any, IState> {
   }
 
   private handleClipboardWrite(data: any) {
-  // overwrite the clipboard only if there is a valid value
+    // overwrite the clipboard only if there is a valid value
     if (data && (data as any).value)
       return this.connection.send('Clipboard.writeText', data)
   }
