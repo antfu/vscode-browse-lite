@@ -153,24 +153,15 @@ class App extends React.Component<any, IState> {
     })
 
     this.connection.on('Page.windowOpen', (result: any) => {
-      if (String(result.url).trim().startsWith('vscode:')) {
-        this.connection.send('extension.openVSCodeUri', {
-          url: result.url,
-        })
-      }
-      else {
-        this.connection.send('extension.windowOpenRequested', {
-          url: result.url,
-        })
-      }
+      if (this.handleVSCodeUri(result.url))
+        return
+      this.connection.send('extension.windowOpenRequested', {
+        url: result.url,
+      })
     })
 
     this.connection.on('Page.frameRequestedNavigation', (result: any) => {
-      if (String(result.url).trim().startsWith('vscode:')) {
-        this.connection.send('extension.openVSCodeUri', {
-          url: result.url,
-        })
-      }
+      this.handleVSCodeUri(result.url)
     })
 
     this.connection.on('Page.javascriptDialogOpening', (result: any) => {
@@ -672,6 +663,14 @@ class App extends React.Component<any, IState> {
         })
       }
     }
+  }
+
+  private handleVSCodeUri = (url: string) => {
+    if (String(url).trim().startsWith('vscode:')) {
+      this.connection.send('extension.openVSCodeUri', { url })
+      return true
+    }
+    return false
   }
 }
 
