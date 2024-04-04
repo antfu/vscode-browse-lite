@@ -153,9 +153,16 @@ class App extends React.Component<any, IState> {
     })
 
     this.connection.on('Page.windowOpen', (result: any) => {
-      this.connection.send('extension.windowOpenRequested', {
-        url: result.url,
-      })
+      if (String(result.url).trim().startsWith('vscode:')) {
+        this.connection.send('extension.openVSCodeUri', {
+          url: result.url,
+        })
+      }
+      else {
+        this.connection.send('extension.windowOpenRequested', {
+          url: result.url,
+        })
+      }
     })
 
     this.connection.on('Page.frameRequestedNavigation', (result: any) => {
