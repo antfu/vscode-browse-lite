@@ -158,6 +158,14 @@ class App extends React.Component<any, IState> {
       })
     })
 
+    this.connection.on('Page.frameRequestedNavigation', (result: any) => {
+      if (String(result.url).trim().startsWith('vscode:')) {
+        this.connection.send('extension.openVSCodeUri', {
+          url: result.url,
+        })
+      }
+    })
+
     this.connection.on('Page.javascriptDialogOpening', (result: any) => {
       const { url, message, type } = result
 

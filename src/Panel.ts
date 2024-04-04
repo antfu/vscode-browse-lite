@@ -89,6 +89,9 @@ export class Panel extends EventEmitter2 {
         if (msg.type === 'extension.openFile')
           this.handleOpenFileRequest(msg.params)
 
+        if (msg.type === 'extension.openVSCodeUri')
+          commands.executeCommand('vscode.open', Uri.parse(msg.params.url))
+
         if (msg.type === 'extension.windowDialogRequested') {
           const { message, type } = msg.params
           if (type == 'alert') {
