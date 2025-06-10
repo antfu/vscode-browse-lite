@@ -26,6 +26,7 @@ interface IState {
   isVerboseMode: boolean
   isInspectEnabled: boolean
   isDeviceEmulationEnabled: boolean
+  toolbarHeight: number;
   viewportMetadata: IViewport
   history: {
     canGoBack: boolean
@@ -73,6 +74,7 @@ class App extends React.Component<any, IState> {
       errorText: undefined,
       isInspectEnabled: false,
       isDeviceEmulationEnabled: false,
+      toolbarHeight: 0,
       history: {
         canGoBack: false,
         canGoForward: false,
@@ -99,6 +101,7 @@ class App extends React.Component<any, IState> {
     this.connection = new Connection()
     this.onToolbarActionInvoked = this.onToolbarActionInvoked.bind(this)
     this.onViewportChanged = this.onViewportChanged.bind(this)
+    this.updateToolbarHeight = this.updateToolbarHeight.bind(this);
 
     this.connection.enableVerboseLogging(this.state.isVerboseMode)
 
@@ -210,6 +213,25 @@ class App extends React.Component<any, IState> {
     this.startCasting()
 
     this.cdpHelper = new CDPHelper(this.connection)
+
+    this.updateToolbarHeight();
+    window.addEventListener('resize', this.updateToolbarHeight);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener('resize', this.updateToolbarHeight);
+  }
+
+  private updateToolbarHeight() {
+    const appRoot = document.querySelector('.App');
+    let newToolbarHeight = 0;
+    if (appRoot && !this.state.isDebug) {
+      const toolbarElement = appRoot.querySelector('.toolbar') as HTMLElement;
+      if (toolbarElement) {
+        newToolbarHeight = toolbarElement.offsetHeight;
+      }
+    }
+    this.setState({ toolbarHeight: newToolbarHeight });
   }
 
   private async handleScreencastFrame(result: any) {
@@ -234,8 +256,12 @@ class App extends React.Component<any, IState> {
     this.nextViewportSize = undefined
   }
 
-  public componentDidUpdate() {
-    const { isVerboseMode } = this.state
+  public componentDidUpdate(prevProps: any, prevState: IState) {
+    const { isVerboseMode, isDebug } = this.state
+
+    if (prevState.isDebug !== isDebug) {
+      this.updateToolbarHeight();
+    }
 
     this.connection.enableVerboseLogging(isVerboseMode)
   }
@@ -260,6 +286,7 @@ class App extends React.Component<any, IState> {
               )
         }
         <Viewport
+          toolbarHeight={this.state.toolbarHeight}
           viewport={this.state.viewportMetadata}
           isInspectEnabled={this.state.isInspectEnabled}
           isDeviceEmulationEnabled={this.state.isDeviceEmulationEnabled}

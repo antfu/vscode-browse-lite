@@ -140,7 +140,7 @@ class Viewport extends React.Component<any, any> {
 
     if (viewport.isFixedSize) {
       const screenViewportDimensions = {
-        height: window.innerHeight - 38, // TODO: Remove hardcoded toolbar height
+        height: window.innerHeight - (this.props.toolbarHeight || 38), // TODO: Remove hardcoded toolbar height
         width: window.innerWidth,
       }
 
